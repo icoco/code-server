@@ -16,7 +16,7 @@ import { InteractRule } from '@replit/codemirror-interact';
 // * The presence notifications
 // * The UI for AI Assist
 export const VZMiddle = ({
-  enableAIAssist = true,
+  enableAIAssist = !true,
   aiAssistEndpoint,
   aiAssistOptions,
   aiAssistTooltipText,

@@ -39,6 +39,9 @@ export const useShareDB = ({
 
   const [connected, setConnected] =
     useState<boolean>(false);
+
+  const [documentId, setDocumentId]= useState<String | null>(null);
+
   useEffect(() => {
     // Listen for connection state changes
     connection.on('connected', () => {
@@ -59,6 +62,8 @@ export const useShareDB = ({
     // Initialize the ShareDB document.
     const shareDBDoc = connection.get(collection, id);
 
+    setDocumentId(id);
+    
     // Subscribe to the document to get updates.
     // This callback gets called once only.
     shareDBDoc.subscribe(() => {
@@ -127,5 +132,6 @@ export const useShareDB = ({
     docPresence,
     submitOperation,
     connected,
+    documentId,
   };
 };

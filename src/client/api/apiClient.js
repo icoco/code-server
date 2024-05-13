@@ -40,6 +40,13 @@ export const reloadDocThen = ()=>{
   return fetchData(api);
 } 
 
-        
+export const getDocInfoById = ()=>{  
+  const docId = getRequestDocId();
+  
+  const ts = Date.now()
+  const api = `/api/doc/info?docId=${docId}&ts=${ts}`
+  return fetchData(api);
+} 
+    
  
  

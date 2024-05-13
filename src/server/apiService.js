@@ -72,7 +72,15 @@ export const setupApiService = function(app,myShareDB,httpServer){
         }
     
     });
-
+    app.get('/api/doc/info', (req, res) => { 
+        const  docId  = req.query['docId'];
+        const path =  myShareDB.getDocPathById(docId); 
+        const info ={
+            docId:docId,
+            path:path
+        }
+        echoSuccss(res,{succss: true,data:info });
+    });
     // echo for check api lives 
     app.get('/api/info', (req, res) => { 
         const info = myShareDB.toString();

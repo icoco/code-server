@@ -1,12 +1,11 @@
 import React,  { Suspense} from "react";
-import App from '../App';
+import App from '../App'; 
+import { reloadDocThen }  from '../api/apiClient'
 
-import { reloadDocThen }  from './loader'
-
-const fetchDocStatus = reloadDocThen()
+const fetchHandler = reloadDocThen()
 
 function AppShell() {  
-  const docStatus = fetchDocStatus.read();  
+  const docStatus = fetchHandler.read();  
   return ( 
       <App /> 
       // <Suspense fallback={<p>loading...</p>}>

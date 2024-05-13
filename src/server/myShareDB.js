@@ -97,6 +97,7 @@ export const myShareDB ={
         const hashKey = shaObj.getHash("HEX");
         return hashKey;
     },
+    
     getDocPathById(docId){
         const path = this._docPathSet[docId];
         return path;

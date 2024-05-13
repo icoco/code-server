@@ -83,6 +83,7 @@ function App() {
     docPresence,
     submitOperation,
     connected,
+    documentId,
   } = useShareDB({
     connection,
   });
@@ -110,6 +111,7 @@ function App() {
         typeScriptWorker={typeScriptWorker}
         initialUsername={initialUsername}
         connected={connected}
+        documentId={documentId}
       >
         <div className="app">
           <VZLeft />

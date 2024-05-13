@@ -53,6 +53,8 @@ export type VZCodeContextValue = {
   ) => void;
   localPresence: any;
   docPresence: any;
+  
+  spaceName: String| null;
 
   files: Files | null;
   createFile: (fileName: string, text?: string) => void;
@@ -128,6 +130,7 @@ export type VZCodeContextValue = {
   runCodeRef: React.MutableRefObject<null | (() => void)>;
 
   connected: boolean;
+  documentId: string|null;
 
   hoveredItemId: ItemId | null;
   setHoveredItemId: (itemId: ItemId | null) => void;
@@ -145,6 +148,7 @@ export const VZCodeProvider = ({
   children,
   codeError = null,
   connected,
+  documentId,
 }: {
   content: VZCodeContent;
   shareDBDoc: ShareDBDoc<VZCodeContent>;
@@ -157,6 +161,7 @@ export const VZCodeProvider = ({
   children: React.ReactNode;
   codeError?: string | null;
   connected: boolean;
+  documentId?: string | null;
 }) => {
   // Auto-run Pretter after local changes.
   const {
@@ -387,6 +392,7 @@ export const VZCodeProvider = ({
     runCodeRef,
 
     connected,
+    documentId,
 
     hoveredItemId,
     setHoveredItemId,

@@ -1,7 +1,7 @@
-import { useCallback, useContext, useMemo } from 'react';
+import { useCallback, useContext, useMemo,Suspense } from 'react';
 import {
   FileId,
-  FileTree,
+  FileTree, 
   FileTreeFile,
 } from '../../types';
 import { Tooltip, OverlayTrigger } from '../bootstrap';
@@ -20,6 +20,10 @@ import { Listing } from './Listing';
 import { useDragAndDrop } from './useDragAndDrop';
 import './styles.scss';
 import { backgroundColor } from '../themes/vizhubTheme/colors';
+
+//import { DocumentBar } from "../Components/DocumentBarWidget";
+import  React  from 'react';
+const DocumentBar = React.lazy(() => import('../Components/DocumentBarWidget'));
 
 // TODO turn this UI back on when we are actually detecting
 // the connection status.
@@ -40,6 +44,7 @@ export const VZSidebar = ({
   openKeyboardShortcuts?: string;
 }) => {
   const {
+    spaceName,
     files,
     openTab,
     setIsSettingsOpen,
@@ -47,6 +52,7 @@ export const VZSidebar = ({
     handleOpenCreateFileModal,
     handleOpenCreateDirModal,
     connected,
+    documentId,
   } = useContext(VZCodeContext);
 
   const fileTree = useMemo(
@@ -105,9 +111,9 @@ export const VZSidebar = ({
     >
       <div className="files">
         <div className="full-box">
-          <div className="sidebar-section-hint">Files</div>
+          <div className="sidebar-section-hint">Addons</div>
           <div className="sidebar-section-buttons">
-            <OverlayTrigger
+            {/* <OverlayTrigger
               placement="right"
               overlay={
                 <Tooltip id="open-keyboard-shortcuts">
@@ -121,9 +127,9 @@ export const VZSidebar = ({
               >
                 <QuestionMarkSVG />
               </i>
-            </OverlayTrigger>
+            </OverlayTrigger> */}
 
-            <OverlayTrigger
+            {/* <OverlayTrigger
               placement="right"
               overlay={
                 <Tooltip id="report-bug-tooltip">
@@ -140,9 +146,9 @@ export const VZSidebar = ({
                   <BugSVG />
                 </i>
               </a>
-            </OverlayTrigger>
+            </OverlayTrigger> */}
 
-            <OverlayTrigger
+            {/* <OverlayTrigger
               placement="left"
               overlay={
                 <Tooltip id="open-settings-tooltip">
@@ -156,7 +162,7 @@ export const VZSidebar = ({
               >
                 <GearSVG />
               </i>
-            </OverlayTrigger>
+            </OverlayTrigger> */}
 
             <OverlayTrigger
               placement="left"
@@ -192,7 +198,15 @@ export const VZSidebar = ({
             </OverlayTrigger>
           </div>
         </div>
-        <div >xx</div>
+        {documentId ? 
+          (
+            <Suspense fallback={<p>loading...</p>}>
+              <DocumentBar documentId={documentId}></DocumentBar>
+            </Suspense>
+          )
+          :(<div>?</div>)
+        } 
+        
         {isDragOver ? (
           <div className="empty">
             <div className="empty-text">
@@ -224,20 +238,38 @@ export const VZSidebar = ({
             </div>
           </div>
         )}
-      </div>
+      </div> 
 
       {enableConnectionStatus && (
         <div className="connection-status">
-          {connected ? 'Connected' : 'Connection Lost'}
-          <div className="connection">
-            <div
+          {/* {connected ? 'Connected' : 'Connection Lost'} */}
+          <div 
               className={`connection-status-indicator ${
                 connected ? 'connected' : 'disconnected'
               }`}
-            />
+            />  
+          <div > 
+            <OverlayTrigger
+                  placement="left"
+                  overlay={
+                    <Tooltip id="open-settings-tooltip">
+                      {openSettingsTooltipText}
+                    </Tooltip>
+                  }
+                >
+                  <i
+                    onClick={handleSettingsClick}
+                    className="icon-button icon-button-dark"
+                  >
+                    <GearSVG />
+                  </i>
+            </OverlayTrigger>
           </div>
         </div>
       )}
-    </div>
+         
+       
+      </div>
+    
   );
 };
