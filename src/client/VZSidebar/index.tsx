@@ -111,7 +111,7 @@ export const VZSidebar = ({
     >
       <div className="files">
         <div className="full-box">
-          <div className="sidebar-section-hint">Addons</div>
+          <div className="sidebar-section-hint">Folders</div>
           <div className="sidebar-section-buttons">
             {/* <OverlayTrigger
               placement="right"
