@@ -1,29 +1,32 @@
 // Notice how you import it, changed since ver 3.
 import { Collapse } from '@kunukn/react-collapse'
-import React from 'react'
- 
-import { getDocInfoById } from "../../api/apiClient.js"
- 
+import React from 'react' 
+import { getDocInfoById } from "../../api/apiClient.js" 
 import './styles.scss';
 
-const handler = getDocInfoById();
+import { DirectoryArrowSVG } from '../../Icons';
 
-export default  ({documentId}:{documentId: string;})=> {
+export const docHandler = {
+  _lastId:null,
+  _handler:null,
+  getDocInfoById(docId=null){
+    
+    if (docId){
+      if (docId == this._lastId){
+        return this._handler;
+      }
+      this._handler = getDocInfoById(docId);
+      this._lastId = docId;
+    } 
+    return this._handler;
+  }
+} 
+ 
+export const DocumentBar =  ({documentId}:{documentId: string;})=> {
   const [isOpen, setIsOpen] = React.useState(false)
   const onToggle = () => setIsOpen((s) => !s)
-   
-  console.log('DocumentBar-> getDocInfoById');
-
-
-  // startTransition(() => {
-  //   const fetchHandler = getDocInfoById(documentId);
-  //   console.log('DocumentBar-> fetchHandler');
-  
-  //   const info = fetchHandler.read();
-  //   const buf =JSON.stringify(info)
-  //   setDocInfo(buf);
-  // })
-   const response  = handler.read(); 
+ 
+   const response  = docHandler.getDocInfoById().read(); 
    let docPath = '';
    if (response && response.data){
       docPath = response.data.path;
@@ -31,20 +34,24 @@ export default  ({documentId}:{documentId: string;})=> {
    
   return (
           
-    <div className="documentBar">
-     
-        <div className='title' onClick={onToggle}> {documentId} </div>
-        <Collapse
-          isOpen={isOpen}
-          transition="height 300ms cubic-bezier(0.4, 0, 0.2, 1)"
+    <div className="documentBar ">
+      <div className='name titleRow' onClick={onToggle}>
+        <div
+          className="arrow-wrapper"
+          style={{
+            transform: `rotate(${isOpen ? 90 : 0}deg)`,
+          }}
         >
-          
-            <div className='card'>
-              <span className='title'>path:</span><p>{docPath} </p>
-            </div>
-         
-        </Collapse>
-      
+          <DirectoryArrowSVG />
+        </div>
+        <div> {documentId} </div>
+      </div>
+      <Collapse isOpen={isOpen} transition="height 300ms cubic-bezier(0.4, 0, 0.2, 1)"> 
+        <div className='card'>
+          <span className='title'>path:</span><p>{docPath} </p>
+        </div> 
+      </Collapse> 
+
     </div>
   )
 }

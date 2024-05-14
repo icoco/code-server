@@ -1,5 +1,5 @@
 {
-  "name": "vzcode",
+  "name": "code-server",
   "version": "1.0.0",
   "description": "Multiplayer code editor system",
   "main": "src/index.ts",
@@ -35,6 +35,7 @@
     "url": "git+https://github.com/vizhub-core/vzcode.git"
   },
   "keywords": [
+    "CodeServer",
     "Code",
     "Editor",
     "CodeMirror",
@@ -45,57 +46,21 @@
     "Data",
     "Visualization"
   ],
-  "contributors": [
+  "contributors": [ 
     {
-      "name": "Curran Kelleher",
-      "url": "https://github.com/curran"
+      "name": "VZCode",
+      "url": "https://github.com/vizhub-core/vzcode"
     },
     {
-      "name": "Anooj Pai",
-      "url": "https://github.com/Anooj-Pai"
-    },
-    {
-      "name": "Jack Hankin",
-      "url": "https://github.com/Darmin-Geek"
-    },
-    {
-      "name": "Amanda Ruan",
-      "url": "https://github.com/aruan20"
-    },
-    {
-      "name": "Evan Whymark",
-      "url": "https://github.com/EvWhymark"
-    },
-    {
-      "name": "Ethan Nuessle",
-      "url": "https://github.com/enuessle"
-    },
-    {
-      "name": "Brandon Balchand",
-      "url": "https://github.com/MandingoBrandon"
-    },
-    {
-      "name": "Demetrius Ho Sang",
-      "url": "https://github.com/demhos"
-    },
-    {
-      "name": "Jary Chen",
-      "url": "https://github.com/CJary"
-    },
-    {
-      "name": "Shashank Garg",
-      "url": "https://github.com/viratkohli2011"
-    },
-    {
-      "name": "Nghia Minh Huynh",
-      "url": "https://github.com/NghiaMinhHuynh"
+      "name": "icoco",
+      "url": "https://github.com/icoco/code-server"
     }
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/vizhub-core/vzcode/issues"
+    "url": "https://github.com/icoco/code-server/issues"
   },
-  "homepage": "https://github.com/vizhub-core/vzcode#readme",
+  "homepage": "https://github.com/icoco/code-server#readme",
   "dependencies": {
     "@codemirror/autocomplete": "^6.16.0",
     "@codemirror/lang-css": "^6.2.1",

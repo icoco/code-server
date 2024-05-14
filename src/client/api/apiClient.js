@@ -1,5 +1,5 @@
 import { Request }  from "../utils/Request.js";
-import { fetchData } from "../utils/Fetcher.js"
+import { getData } from "../utils/RequestClient.js"
 
 const getRequestDocId = function(){
   const args = Request.getParameters();
@@ -37,15 +37,15 @@ export const reloadDocThen = ()=>{
   const docId = getRequestDocId();
   const ts = Date.now()
   const api = `/api/refresh?docId=${docId}&ts=${ts}`
-  return fetchData(api);
+  return getData(api);
 } 
 
-export const getDocInfoById = ()=>{  
-  const docId = getRequestDocId();
-  
+export const getDocInfoById = (docId)=>{  
+ // const docId = getRequestDocId();
+
   const ts = Date.now()
   const api = `/api/doc/info?docId=${docId}&ts=${ts}`
-  return fetchData(api);
+  return getData(api);
 } 
     
  

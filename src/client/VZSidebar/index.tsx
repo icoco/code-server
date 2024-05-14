@@ -21,9 +21,14 @@ import { useDragAndDrop } from './useDragAndDrop';
 import './styles.scss';
 import { backgroundColor } from '../themes/vizhubTheme/colors';
 
-//import { DocumentBar } from "../Components/DocumentBarWidget";
 import  React  from 'react';
-const DocumentBar = React.lazy(() => import('../Components/DocumentBarWidget'));
+import { DocumentBar,docHandler } from "../Components/DocumentBarWidget";
+ 
+
+//const DocumentBar = React.lazy(() => import('../Components/DocumentBarWidget'));
+
+// import Shows from "../components/Shows";
+
 
 // TODO turn this UI back on when we are actually detecting
 // the connection status.
@@ -99,6 +104,16 @@ export const VZSidebar = ({
     handleDragLeave,
     handleDrop,
   } = useDragAndDrop();
+
+ 
+  docHandler.getDocInfoById(documentId);
+  const fetchDocumentBar = function(documentId){  
+    return (
+      <Suspense fallback={<p>loading...</p>}>
+        <DocumentBar documentId={documentId}></DocumentBar>
+      </Suspense>
+    )
+  }
 
   return (
     <div
@@ -199,10 +214,8 @@ export const VZSidebar = ({
           </div>
         </div>
         {documentId ? 
-          (
-            <Suspense fallback={<p>loading...</p>}>
-              <DocumentBar documentId={documentId}></DocumentBar>
-            </Suspense>
+          ( 
+            fetchDocumentBar(documentId)
           )
           :(<div>?</div>)
         } 
