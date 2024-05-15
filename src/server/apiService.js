@@ -72,6 +72,23 @@ export const setupApiService = function(app,myShareDB,httpServer){
         }
     
     });
+    
+    app.get('/api/doc/list', (req, res) => { 
+        const list =[];
+        const docPathSet =  myShareDB.getDocPathSet();
+       
+        for (const [key, value] of Object.entries(docPathSet)) {
+            list.push({id:key,path:value}); 
+
+            if (false){
+                for (let index = 1; index < 20; index++) {  
+                    list.push({id:key + (""+index) ,path:value});
+                }    
+            } 
+        } 
+        echoSuccss(res,{succss: true,data:list });
+    });
+
     app.get('/api/doc/info', (req, res) => { 
         const  docId  = req.query['docId'];
         const path =  myShareDB.getDocPathById(docId); 

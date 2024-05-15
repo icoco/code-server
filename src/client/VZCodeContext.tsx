@@ -89,7 +89,12 @@ export type VZCodeContextValue = {
   isSettingsOpen: boolean;
   setIsSettingsOpen: (isSettingsOpen: boolean) => void;
   closeSettings: () => void;
-
+  
+  //folders
+  isFoldersOpen: boolean;
+  setIsFoldersOpen: (isFoldersOpen: boolean) => void;
+  closeFolders: () => void;
+  
   isDocOpen: boolean;
   setIsDocOpen: (isDocOpen: boolean) => void;
   closeDoc: () => void;
@@ -214,6 +219,7 @@ export const VZCodeProvider = ({
     activeFileId,
     theme,
     isSettingsOpen,
+    isFoldersOpen,
     isDocOpen,
     editorWantsFocus,
     username,
@@ -228,8 +234,11 @@ export const VZCodeProvider = ({
     closeTabs,
     setTheme,
     setIsSettingsOpen,
+    setIsFoldersOpen,
+
     setIsDocOpen,
     closeSettings,
+    closeFolders,
     closeDoc,
     editorNoLongerWantsFocus,
     setUsername,
@@ -358,6 +367,10 @@ export const VZCodeProvider = ({
     isSettingsOpen,
     setIsSettingsOpen,
     closeSettings,
+    //
+    isFoldersOpen,
+    setIsFoldersOpen,
+    closeFolders,
 
     isDocOpen,
     setIsDocOpen,

@@ -92,8 +92,8 @@ export const useFileCRUD = ({
       oldName: string,
       newName: string,
     ) => {
-      console.log(path);
-      console.log(oldName);
+      // console.log(path);
+      // console.log(oldName);
       submitOperation((document: VZCodeContent) => {
         const updatedFiles = Object.keys(
           document.files,

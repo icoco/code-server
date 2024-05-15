@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs'; 
- 
+import { myLogger } from './utils.js';
 
 // 
 const isDevMode = function(){ 
@@ -13,15 +13,13 @@ const isDevMode = function(){
 const getCurrentExeFolder = function(){ 
   //process.cwd();////__dirname;// path.dirname(process.execPath);
   const result = isDevMode()? process.cwd(): path.dirname(process.argv[0]); 
-   
-  console.log(`getCurrentExeFolder:${result}`)
+    
   return result; 
 }
 
 function toFullPath(val){ 
   const relateTo = `.${path.sep}`;
-   
-  console.log(`relateTo ${relateTo}`)
+    
   if (val.startsWith(relateTo)){
     const currentPath = getCurrentExeFolder();//process.cwd()
     const result =  path.join(currentPath,val);
@@ -105,7 +103,7 @@ export const AppEnvNoSense ={
       for (let index = 0; index < list.length -2; index++) { 
           result = path.join(result,list[index]);
       }
-      console.log(`🔥 getProjectRootPath: ${result}`)
+      myLogger.debug(`getProjectRootPath: ${result}`)
       return result;
   }
 }

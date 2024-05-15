@@ -1,19 +1,28 @@
 
-  .documentBar{
-     margin: 0px 5px 0px 5px; 
+  .document-bar{
+     margin: 0px 5px 5px 5px; 
     
-    .titleRow{ 
+    .title-row{ 
       cursor: pointer;
       min-height: 40px;
       border-radius: 4px;
       font-family: var(--vzcode-font-family);
       font-weight: 500;
     }
-    .titleRow:hover {
+    .title-row:hover {
       // background-color: #47546b;
       background-color: rgba(255, 255, 255, 0.075);
     }
-
+    .title-content-short{
+      width: 450px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    .title-content-full{
+    
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
     .card{ 
       background-color: rgb(60, 217, 245);
       // margin: 10px 10px 10px 10px;
@@ -22,4 +31,32 @@
     .collapse-css-transition {
       transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1); 
     }  
+
+    .selecteBox{ 
+    
+      // display: flex;
+      // justify-content: right;
+      // padding: 10px;
+      // font-size: 12px;
+      margin: auto;
+      margin-right: 10px;
+      
+      .rightButton {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border-color: beige;
+        margin: auto;
+        cursor: pointer;
+        
+      }
+      .rightButton:hover { 
+        scale: 1;
+        color: aqua;
+      }
+      .emoj-buttion{
+        font-size: medium;
+        font-weight: bold;
+      }
+    }
   }

@@ -68,6 +68,17 @@ export const useActions = (
     [dispatch],
   );
 
+  // True to show the folers modal.
+  const setIsFoldersOpen = useCallback(
+    (value: boolean) => {
+      dispatch({
+        type: 'set_is_folders_open',
+        value: value,
+      });
+    },
+    [dispatch],
+  );
+
   const setIsDocOpen = useCallback(
     (value: boolean) => {
       dispatch({
@@ -81,6 +92,10 @@ export const useActions = (
   const closeSettings = useCallback(() => {
     setIsSettingsOpen(false);
   }, [setIsSettingsOpen]);
+  //
+  const closeFolders = useCallback(() => {
+    setIsFoldersOpen(false);
+  }, [setIsFoldersOpen]);
 
   const closeDoc = useCallback(() => {
     setIsDocOpen(false);
@@ -110,8 +125,10 @@ export const useActions = (
     closeTabs,
     setTheme,
     setIsSettingsOpen,
+    setIsFoldersOpen,
     setIsDocOpen,
     closeSettings,
+    closeFolders,
     closeDoc,
     editorNoLongerWantsFocus,
     setUsername,

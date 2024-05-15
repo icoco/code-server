@@ -23,7 +23,7 @@ import { backgroundColor } from '../themes/vizhubTheme/colors';
 
 import  React  from 'react';
 import { DocumentBar,docHandler } from "../Components/DocumentBarWidget";
- 
+import { Tooltip as MyToolTip } from 'react-tooltip' 
 
 //const DocumentBar = React.lazy(() => import('../Components/DocumentBarWidget'));
 
@@ -53,6 +53,7 @@ export const VZSidebar = ({
     files,
     openTab,
     setIsSettingsOpen,
+    setIsFoldersOpen,
     setIsDocOpen,
     handleOpenCreateFileModal,
     handleOpenCreateDirModal,
@@ -105,15 +106,21 @@ export const VZSidebar = ({
     handleDrop,
   } = useDragAndDrop();
 
- 
+  //avoid repeat fetch ?!
   docHandler.getDocInfoById(documentId);
   const fetchDocumentBar = function(documentId){  
     return (
       <Suspense fallback={<p>loading...</p>}>
-        <DocumentBar documentId={documentId}></DocumentBar>
+        <DocumentBar documentId={documentId} rowData={undefined} onPickRow={undefined} ></DocumentBar>
       </Suspense>
     )
   }
+
+  // 
+  const handleFoldersClick = useCallback(() => {
+    //setIsSettingsOpen(true);
+    setIsFoldersOpen(true);
+  }, []);
 
   return (
     <div
@@ -126,7 +133,8 @@ export const VZSidebar = ({
     >
       <div className="files">
         <div className="full-box">
-          <div className="sidebar-section-hint">Folders</div>
+          <div className="sidebar-section-hint folder" onClick={handleFoldersClick} data-tooltip-id="my-tooltip" data-tooltip-content="Folders">🗂️</div>
+          <MyToolTip id="my-tooltip" ></MyToolTip>
           <div className="sidebar-section-buttons">
             {/* <OverlayTrigger
               placement="right"

@@ -8,6 +8,8 @@ import {
   setActiveFileRightReducer,
 } from './setActiveFileLeftRightReducer';
 import { setIsSettingsOpenReducer } from './setIsSettingsOpenReducer';
+import { setIsFoldersOpenReducer } from './setIsFoldersOpenReducer';
+
 import { setIsDocOpenReducer } from './setIsDocOpenReducer';
 import { setThemeReducer } from './setThemeReducer';
 import { editorNoLongerWantsFocusReducer } from './editorNoLongerWantsFocusReducer';
@@ -29,6 +31,9 @@ export type VZState = {
 
   // True to show the settings modal.
   isSettingsOpen: boolean;
+
+  // True to show the folder list modal.
+  isFoldersOpen: boolean;
 
   isDocOpen: boolean;
 
@@ -71,6 +76,9 @@ export type VZAction =
   // `set_is_settings_open`
   //  * Sets whether the settings modal is open.
   | { type: 'set_is_settings_open'; value: boolean }
+  | { type: 'set_is_folders_open'; value: boolean }
+  
+
   | { type: 'set_is_doc_open'; value: boolean }
 
   // `editor_no_longer_wants_focus`
@@ -108,6 +116,7 @@ const reducers = [
   closeTabsReducer,
   setThemeReducer,
   setIsSettingsOpenReducer,
+  setIsFoldersOpenReducer,
   setIsDocOpenReducer,
   editorNoLongerWantsFocusReducer,
   setUsernameReducer,

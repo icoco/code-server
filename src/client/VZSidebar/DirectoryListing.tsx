@@ -30,11 +30,9 @@ export const DirectoryListing = ({
 
   const handleClick = useCallback(() => {
     const collapse = toggleDirectory(path);
-    if (collapse){
-      console.log(`🧐 collapse setActiveFolderId:`)
+    if (collapse){ 
       onToggleFolderNode(null)  
-    }else{
-      console.log(`🧐 open setActiveFolderId  ${path}`)
+    }else{ 
       onToggleFolderNode(path) 
     }
   }, [toggleDirectory, path]);
