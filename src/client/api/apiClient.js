@@ -34,10 +34,24 @@ export const getDocInfoById = (docId)=>{
   return getData(api);
 } 
 
-export const getDocList = async ()=>{  
+/*
+  folders=[{
+    id: ?
+    name: 
+    data:
+    items:[
+        {
+          id: ?
+          name: 
+          data:
+        }
+    ]
+  }]
+*/
+export const getFolderList = async ()=>{  
    
    const ts = Date.now()
-   const api = `/api/doc/list?&ts=${ts}`
+   const api = `/api/folders?&ts=${ts}`
    return await fetch(api);
     
  } 

@@ -46,7 +46,7 @@ const createShareDBClient = function(){
   // Register our custom JSON1 OT type that supports presence.
   // See https://github.com/vizhub-core/json1-presence
   ShareDBClient.types.register(json1Presence.type);
- 
+   
   // Establish the singleton ShareDB connection over WebSockets.
   // TODO consider using reconnecting WebSocket
   const { Connection } = ShareDBClient;

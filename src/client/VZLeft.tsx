@@ -1,6 +1,6 @@
 import { VZSettings } from './VZSettings';
 
-import { Folders } from './Components/Folders';
+import { FolderPicker } from './Components/FolderPicker';
 
 import { VZKeyboardShortcutsDoc } from './VZKeyboardShortcutsDoc';
 import { VZSidebar } from './VZSidebar';
@@ -21,7 +21,7 @@ export const VZLeft = ({ enableUsernameField = true }) => {
       <VZKeyboardShortcutsDoc
         enableUsernameField={enableUsernameField}
       />
-      <Folders
+      <FolderPicker
         enableUsernameField={enableUsernameField}
       />
       <CreateFileModal />

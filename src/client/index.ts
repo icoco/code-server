@@ -1,4 +1,4 @@
-import { Folders } from './Components/Folders/index';
+ 
 export type { ThemeLabel, ThemeOption } from './themes';
 export type { EditorCache } from './useEditorCache';
 
@@ -6,7 +6,7 @@ export { VZCodeProvider } from './VZCodeContext';
 export { VZSidebar } from './VZSidebar';
 export { VZSettings } from './VZSettings';
 
-export { Folders } from './Components/Folders';
+export { FolderPicker } from './Components/FolderPicker';
 
 export { VZKeyboardShortcutsDoc } from './VZKeyboardShortcutsDoc';
 export { VZResizer } from './VZResizer';

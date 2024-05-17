@@ -20,16 +20,13 @@ import { isDirectory } from './isDirectory.js';
 
 import { myLogger,FileSys } from './utils.js';
 import { myShareDB } from './myShareDB.js';
-import { getPortFromArgs, getWebsiteSpaceFromArgs, getDocumentSpaceFromArgs,prepareSpaceByAsset } from "./cmdArg.js"
+import { getPortFromArgs, getWebsiteSpaceFromArgs, getDocumentSpaceFromArgs,prepareSpaceByAsset,getOptionFromArgs } from "./cmdArg.js"
 import { createShareDbServerBindWss,setupApiService } from './apiService.js';
 import { Constants } from './constants.js';
 
-// The time in milliseconds by which auto-saving is debounced.
-const autoSaveDebounceTimeMS = 800;
 
-// The time in milliseconds by which auto-saving is throttled
-// when the user is interacting with the widgets in the editor.
-const throttleTimeMS = 100;
+//------ slient 
+const slientMode = getOptionFromArgs("--slient",null);
 
 //------ Server port
 const port = getPortFromArgs();
@@ -40,8 +37,7 @@ if (!FileSys.validateDir(websitePath)){
   FileSys.validateDir(websitePath,true)
   //#TODO
   prepareSpaceByAsset('dist',websitePath)
-} 
-
+}  
 //------  Document space path  
 var docSpacePath = getDocumentSpaceFromArgs(); 
 if (!FileSys.validateDir(docSpacePath)){
@@ -52,59 +48,11 @@ if (!FileSys.validateDir(docSpacePath)){
 myLogger.debug(`document space path:${docSpacePath}`);
 myShareDB.init(Constants.homeSpace,docSpacePath);
 
-// because it does not ship with ShareDB.
-ShareDB.types.register(json1Presence.type);
 
-const app = express();
-
-// TODO make this configurable
-// See https://github.com/vizhub-core/vzcode/issues/95
-app.post('/saveTime', (req, res) => {
-  //autoSaveDebounceTimeMS = req.body.autoSaveDebounceTimeMS;
-  console.log('autoSaveDebounceTimeMS', req.body);
-});
-
-// Use ShareDB over WebSocket
-// const shareDBBackend = new ShareDB({
-//   // Enable presence
-//   // See https://github.com/share/sharedb/blob/master/examples/rich-text-presence/server.js#L9
-//   presence: true,
-//   doNotForwardSendPresenceErrorsToClient: false,
-// });
-const server = http.createServer(app);
-// const wss = new WebSocketServer({ server });
-// wss.on('connection', (ws) => {
-//   const clientStream = new WebSocketJSONStream(ws);
-//   shareDBBackend.listen(clientStream);
-
-//   // Prevent server crashes on errors.
-//   clientStream.on('error', (error) => {
-//     console.log('clientStream error: ' + error.message);
-//   });
-
-//   // Handle errors
-//   ws.on('error', (error) => {
-//     console.log('ws error: ' + error.message);
-//   });
-
-//   // Handle disconnections
-//   ws.on('close', (code) => {
-//     clientStream.end();
-//   });
-// });
-
-// Serve static files
-// const filename = fileURLToPath(import.meta.url);
-// const dirname = path.dirname(filename);
-// const dir = path.join(dirname, '..', '..', 'dist');
-// app.use(express.static(dir));
-let dir = websitePath;
-myLogger.debug(`express website root:${dir}`);
-app.use(express.static(dir));
-
-// myShareDB.shareDBBackend = shareDBBackend;
-// myShareDB.openDoc(docSpacePath);
-// setupApiService(app,myShareDB);
+const app = express(); 
+const server = http.createServer(app); 
+myLogger.debug(`express website root:${websitePath}`);
+app.use(express.static(websitePath)); 
  
 createShareDbServerBindWss(server); 
 setupApiService(app,myShareDB,server);
@@ -118,20 +66,24 @@ app.post(
  // handleAIAssist(shareDBDoc),
 );
  
-
+const openBrowserIfNeeds=(url)=>{ 
+  if (slientMode && slientMode.toString() === 'true') return;
+  openBrowser(url);
+}
 
 server.listen(port, async () => {
+  
   if (process.env.NGROK_TOKEN) {
     (async function () {
       await ngrok.authtoken(process.env.NGROK_TOKEN);
       const url = await ngrok.connect(port);
       console.log(`Editor is live at ${url}`);
-      openBrowser(url);
+      openBrowserIfNeeds(url);
     })();
   } else {
     console.log(
       `🚀 Code Editor is live at http://localhost:${port}`,
     );
-    openBrowser(`http://localhost:${port}`);
+    openBrowserIfNeeds(`http://localhost:${port}`);
   }
 });

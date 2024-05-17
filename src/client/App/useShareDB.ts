@@ -40,7 +40,7 @@ export const useShareDB = ({
   const [connected, setConnected] =
     useState<boolean>(false);
 
-  const [documentId, setDocumentId]= useState<String | null>(null);
+  const [documentId, setDocumentId]= useState<string | null>(null);
 
   useEffect(() => {
     // Listen for connection state changes

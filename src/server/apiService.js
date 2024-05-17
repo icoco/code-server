@@ -49,7 +49,9 @@ export const setupApiService = function(app,myShareDB,httpServer){
         }
     
     }); 
-    //
+    /*
+        http://localhost:3030/api/open/?dir=/workspace/code/src
+    */ 
     app.get('/api/open', (req, res) => { 
         myLogger.debug(` api->open: ${JSON.stringify(req.query)} `) 
         //res.send(req.query);
@@ -72,7 +74,8 @@ export const setupApiService = function(app,myShareDB,httpServer){
         }
     
     });
-    
+ 
+
     app.get('/api/doc/list', (req, res) => { 
         const list =[];
         const docPathSet =  myShareDB.getDocPathSet();
@@ -98,6 +101,93 @@ export const setupApiService = function(app,myShareDB,httpServer){
         }
         echoSuccss(res,{succss: true,data:info });
     });
+    
+    function fillDocId(list){
+        if (!list) return ;
+        for (let index = 0; index < list.length; index++) {
+            const item = list[index];
+            const key = myShareDB.toDocKey(item.path);
+            item["id"] = key; 
+        }
+    }
+    /*
+    @purpose: set the folders that contains all avaiable documents(directory path)
+    @url:    http://localhost:3030/api/folders
+    */ 
+   const postFoldersApi = '/api/folders';
+    app.post(postFoldersApi, (req, res) => { 
+        myLogger.debug(`${postFoldersApi} request parameters: ${JSON.stringify(req.query)} `)
+        const ts = Date.now();
+        let params = {
+            folders:[
+               {
+                name:"group-name" + ts,
+                path: "group-path" + ts,
+                data: {},
+                items:[ {
+                    name:"item-name" + ts,
+                    path: 'item-path' + ts,
+                    data:{}
+                }]
+               }
+            ] 
+        }
+        params = req.body;
+        if (!params){
+            return  echoError(res,{'error':"invlidate input"}) ;
+        } 
+        try{
+            let folders = params.folders;
+            // pack the id
+            fillDocId(folders);
+            for (let index = 0; index < folders.length; index++) {
+                const folder = folders[index];
+                if (folder.items){
+                    fillDocId(folder.items);
+                } 
+            }
+            const list = myShareDB.getFolders();
+            folders = folders.concat(list);
+            myShareDB.setFolders(folders);
+            return echoSuccss(res,{succss: true }); 
+        
+        }catch(ex){
+            console.error("Failed setup folders", ex);
+            return echoError(res,{'error':ex.toString()}) ;  
+        }
+    
+    });
+/*
+  folders=[{
+    id: ?
+    name: 
+    data:
+    path: 
+    items:[
+        {
+          id: ?
+          name: 
+          data:
+          path: 
+        }
+    ]
+  }]
+*/  
+    const getFoldesApi = '/api/folders'
+    app.get(getFoldesApi, (req, res) => {  
+        myLogger.debug(`${getFoldesApi} request parameters: ${JSON.stringify(req.query)} `)
+        try{
+            const folders = myShareDB.getFolders();  
+            return echoSuccss(res,{succss: true, data:folders });
+        
+        }catch(ex){
+            console.error("Failed get folders", ex);
+            return echoError(res,{'error':ex.toString()}) ;   
+            
+        }
+    
+    });
+
     // echo for check api lives 
     app.get('/api/info', (req, res) => { 
         const info = myShareDB.toString();

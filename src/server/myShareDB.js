@@ -45,6 +45,24 @@ export const myShareDB ={
     _docSet:{},
     _docPathSet:{},
     
+    /*
+     folders=[{
+        id: ?
+        name:
+        path: 
+        data:
+        items:[
+            {
+                id: ?
+                name:
+                path: 
+                data:
+            }
+        ]
+     }]
+    */
+    _folders:[],
+
     toString(){
         const info={ 
             docPathSet:this._docPathSet
@@ -88,7 +106,8 @@ export const myShareDB ={
             this._cleanDocFromSet(value); 
         } 
     },
-    _toDocKey(path){
+    
+    toDocKey(path){
         if (path === this._defaultSpacePath ){
             return this._defaultSpaceKey;
         }
@@ -103,7 +122,28 @@ export const myShareDB ={
         return path;
     },
     
-    
+    setFolders(val){
+        this._folders = val;
+    },
+
+    getFolders(){ 
+        var result = this._packActiveDocuments();
+        result = result.concat(this._folders);
+        return result;
+    },
+
+    _packActiveDocuments(){
+        var result =[]; 
+        for (const [key, value] of Object.entries(this._docPathSet)) {
+            const folder={
+                id :  key,
+                name: key === this._defaultSpaceKey? key : value,
+                path: value
+            }
+            result.push(folder);
+        }
+        return result;
+    },
     /*
     @return {
              key:
@@ -120,7 +160,7 @@ export const myShareDB ={
             myLogger.debug('openDoc,forceReload')
             this._cleanDocFromSet(path)
         }
-        let key = this._toDocKey(path)
+        let key = this.toDocKey(path)
         const existDoc = this._docSet[key];
         if (existDoc){
             return { id: key} ;
@@ -132,9 +172,9 @@ export const myShareDB ={
 
         return  { id: key} ;
     },
-
+ 
     _cleanDocFromSet(path){
-        let key = this._toDocKey(path)
+        let key = this.toDocKey(path)
         const shareDBDoc = this._docSet[key];
         if (!shareDBDoc){
             return ; 

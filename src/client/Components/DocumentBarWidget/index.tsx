@@ -1,6 +1,6 @@
 // Notice how you import it, changed since ver 3.
 import { Collapse } from '@kunukn/react-collapse'
-import React from 'react' 
+import React, { Children } from 'react' 
 import { getDocInfoById } from "../../api/apiClient.js" 
 import './styles.scss';
 import { DirectoryArrowSVG } from '../../Icons';
@@ -24,13 +24,15 @@ export const docHandler = {
     } 
     return this._handler;
   }
-}   
- 
+}    
 export const DocumentBar =  (
-  {documentId,rowData,onPickRow}:{documentId: string;rowData:IRowItem|null;onPickRow:(row:Object) => void;}
+  {documentId,rowData,onPickRow,children}:
+  {documentId: string;rowData:IRowItem|null;  onPickRow:(row:Object)=>void;  children: React.ReactNode;}
   )=> {
   const [isOpen, setIsOpen] = React.useState(false)
   const onToggle = () => setIsOpen((s) => !s)
+  //use check mount status to avoid repeat execute mount event logic 
+  const mountedOnce = React.useRef<boolean>(false);
 
   const [isChecked, setIsChecked] = React.useState(false);
    
@@ -38,17 +40,36 @@ export const DocumentBar =  (
     onPickRow(rowData);
   }, [rowData, onPickRow]);
 
-  let docPath = ''; 
+  const onMountedOnce = ()=>{
+    if (mountedOnce.current) {
+       return ;
+    }
+    mountedOnce.current = true; 
+    setTimeout(()=>{
+        setIsOpen(true); 
+    },100) 
+  }
+
+  let title = ''; 
+  let docPath = '';
   let titleContentClass = 'title-content-short';
   if ( rowData){
-    docPath = rowData.title;
+    title = rowData.name;
+    docPath = rowData['path']; 
+    if (rowData.items){   
+      onMountedOnce();
+    }
   }else{
     titleContentClass = 'title-content-full';
     const response  = docHandler.getDocInfoById().read(); 
     if (response && response.data){
-        docPath = response.data.path;
+      title = response.data.path;
+      docPath =  response.data.path;
     }
   }
+  
+  //console.debug('repeat ~ render DocumentBar ⚡️')
+
   return (
           
     <div className="document-bar ">
@@ -62,10 +83,10 @@ export const DocumentBar =  (
         >
           <DirectoryArrowSVG />
         </div>
-        {/* <div className='ititle-content'> {docPath} </div> */}
-        <div className={ titleContentClass  }> {docPath} </div>
+       
+        <div className={titleContentClass}> {title} </div>
         {
-          rowData?
+          rowData && !rowData.items?
           (
             
             // <div className='selecteBox' data-tooltip-id="my-tooltip" data-tooltip-content="Open folder" >
@@ -75,7 +96,8 @@ export const DocumentBar =  (
              
             //   <Tooltip id="my-tooltip" ></Tooltip>
             // </div>
-            <div className='selecteBox'   >
+           
+            <div className='selecte-box'   >
               
               <OverlayTrigger
                 placement="left"
@@ -97,10 +119,15 @@ export const DocumentBar =  (
           ):null
         }
 
-      </div>
-      <Collapse isOpen={isOpen} transition="height 300ms cubic-bezier(0.4, 0, 0.2, 1)"> 
-        <div className='card'>
-          <span className='title'>path:</span><p>{docPath} </p>
+      </div> 
+      <Collapse isOpen={isOpen} transition=" height 300ms cubic-bezier(0.4, 0, 0.2, 1)"> 
+        <div className='detail-card'>
+          <div className='detail-card-content'>
+            <p>
+            path: {docPath}  
+            </p> 
+          </div> 
+          {children}
         </div> 
       </Collapse> 
 

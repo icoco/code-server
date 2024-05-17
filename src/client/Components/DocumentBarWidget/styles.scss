@@ -18,21 +18,29 @@
       text-overflow: ellipsis;
       overflow: hidden;
     }
-    .title-content-full{
-    
+    .title-content-full{ 
       text-overflow: ellipsis;
       overflow: hidden;
     }
-    .card{ 
-      background-color: rgb(60, 217, 245);
-      // margin: 10px 10px 10px 10px;
-      box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+    .detail-card{  
+      // margin: 10px 10px 10px 10px;  
+
+       margin-left: 10px;
+       color: rgb(23, 235, 220); 
+
+       .detail-card-content{ 
+          // min-height: 50px;
+          // box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+          border-radius: 5px;  
+         
+       }
     }
     .collapse-css-transition {
+      // transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1); 
       transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1); 
     }  
 
-    .selecteBox{ 
+    .selecte-box{ 
     
       // display: flex;
       // justify-content: right;

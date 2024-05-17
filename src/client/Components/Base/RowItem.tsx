@@ -1,8 +1,10 @@
 interface IRowItem {
-    id : string ;
-    title : string ;
+    id : string ; 
     name: string;
     data: Object;
+    items: IRowItem[];
+
+    
 }
 
 export {IRowItem};

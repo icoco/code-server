@@ -9,6 +9,11 @@ export const ignoreFilePattern =
 .vzignore
 .ignore
 .gitignore
+.png
+.jpeg
+.exe
+.wasm
+.po
 `;
 
 /**
