@@ -9,11 +9,6 @@ export const ignoreFilePattern =
 .vzignore
 .ignore
 .gitignore
-.png
-.jpeg
-.exe
-.wasm
-.po
 `;
 
 /**
@@ -26,4 +21,8 @@ export const baseIgnore =
   `
 .git/
 node_modules/
+code-server-win.exe
+code-server-linux
+code-server-macos
 `;
+// ingore self binary app

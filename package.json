@@ -1,7 +1,8 @@
 {
   "name": "code-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Multiplayer code editor system",
+  "forked": "https://github.com/vizhub-core/vzcode",
   "main": "src/index.ts",
   "type": "module",
   "bin": "dist_server/server/index.js",
@@ -22,7 +23,7 @@
    
     "start-server-max": "cross-env NODE_OPTIONS=--max_old_space_size=8096 & node --max-old-space-size=8096  src/server/index.js dev --space=./space --site=./dist",
 
-    "start-server": "node src/server/index.js dev --space=./space --site=./dist  --slient=true",
+    "start-server": "node src/server/index.js dev --space=./space --site=./dist ",
 
     "build-server": "npx babel ./src --out-dir dist_server",
     "pkg": "pkg . ",
