@@ -20,15 +20,12 @@
     "build-release": "vite build --mode release",
     "preview": "concurrently \"npm run test-interactive\" \"vite preview\"",
     "prepublishOnly": "npm run build-release",
-   
     "start-server-max": "cross-env NODE_OPTIONS=--max_old_space_size=8096 & node --max-old-space-size=8096  src/server/index.js dev --space=./space --site=./dist",
-
-    "start-server": "node src/server/index.js dev --space=./space --site=./dist ",
-
+    "start-server": "node src/server/index.js dev --space=./space --site=./dist --focus=__manifest__.py",
     "build-server": "npx babel ./src --out-dir dist_server",
     "pkg": "pkg . ",
     "pkg-pack": "copyfiles ./dist/* ./dist/**/* ./dist_server_bin  & copyfiles ./space/* ./dist_server_bin ",
-    "pkg-go": "concurrently \"npm run pkg\" \"npm run pkg-pack\""
+    "pkg-release": "concurrently  \"npm run pkg\" \"npm run pkg-pack\""
   },
   "pkg": {
     "scripts": "dist_server/server/index.js",
@@ -116,7 +113,9 @@
     "react-arborist": "^3.4.0",
     "react-bootstrap": "^2.10.2",
     "react-dom": "^18.3.1",
+    "react-json-to-table": "^0.1.7",
     "react-router-dom": "^6.23.0",
+  
     "react-tooltip": "^5.26.4",
     "react-viewport-list": "^7.1.2",
     "sharedb": "^4.1.4",

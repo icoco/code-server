@@ -1,8 +1,12 @@
-import { myLogger } from './utils.js';
+import express from 'express';
 import ShareDB from 'sharedb';
+import bodyParser from 'body-parser'; 
 import { WebSocketServer } from 'ws';
 import WebSocketJSONStream from '@teamwork/websocket-json-stream';
+
+import { myLogger } from './utils.js';
 import { myShareDB } from './myShareDB.js';
+import { RuntimeOption } from './runtimeOption.js'
 
 function echoError(res,data,errCode){
     if (errCode){
@@ -12,7 +16,7 @@ function echoError(res,data,errCode){
     return res.status(500).send(data);
   }
   
-function echoSuccss(res,data){ 
+function echoSuccess(res,data){ 
     res.header('Content-Type', 'application/json;charset=utf-8') 
     return res.status(200).send(data);
 }
@@ -20,6 +24,13 @@ function echoSuccss(res,data){
 export const setupApiService = function(app,myShareDB,httpServer){ 
 
     app.disable('etag');
+    
+    app.use(express.json());
+
+    app.use(express.json({limit: '999mb'}));
+    app.use(express.urlencoded({limit: '999mb', extended: true, parameterLimit: 50000}));
+    
+    
     /*
         open doc folder then trigger render on web page
         eg: http://localhost:3030/open/?dir=/workspace/code/src
@@ -65,7 +76,7 @@ export const setupApiService = function(app,myShareDB,httpServer){
             myLogger.debug(`ShareDB.openDoc:${doc}`);
             myLogger.debug(`ShareDB:${myShareDB}`);
         
-            return echoSuccss(res,{succss: true, doc:doc });
+            return echoSuccess(res,{success: true, doc:doc });
         
         }catch(ex){
             console.error("Failed openDoc", ex);
@@ -89,7 +100,7 @@ export const setupApiService = function(app,myShareDB,httpServer){
                 }    
             } 
         } 
-        echoSuccss(res,{succss: true,data:list });
+        echoSuccess(res,{success: true,data:list });
     });
 
     app.get('/api/doc/info', (req, res) => { 
@@ -99,15 +110,18 @@ export const setupApiService = function(app,myShareDB,httpServer){
             docId:docId,
             path:path
         }
-        echoSuccss(res,{succss: true,data:info });
+        echoSuccess(res,{success: true,data:info });
     });
     
-    function fillDocId(list){
+    function fillDocId(list,put2Cache=false){
         if (!list) return ;
         for (let index = 0; index < list.length; index++) {
             const item = list[index];
             const key = myShareDB.toDocKey(item.path);
-            item["id"] = key; 
+            item["id"] = key;  
+            if (put2Cache){
+                myShareDB.cacheDocPath(key,item.path);
+            }
         }
     }
     /*
@@ -116,11 +130,14 @@ export const setupApiService = function(app,myShareDB,httpServer){
     */ 
    const postFoldersApi = '/api/folders';
     app.post(postFoldersApi, (req, res) => { 
-        myLogger.debug(`${postFoldersApi} request parameters: ${JSON.stringify(req.query)} `)
+        if (myLogger.debugMode()){
+            myLogger.debug(`${postFoldersApi} request : ${JSON.stringify(req.body)} `)
+        } 
         const ts = Date.now();
         let params = {
             folders:[
                {
+                parent_id: "xxx", // option 
                 name:"group-name" + ts,
                 path: "group-path" + ts,
                 data: {},
@@ -139,17 +156,16 @@ export const setupApiService = function(app,myShareDB,httpServer){
         try{
             let folders = params.folders;
             // pack the id
-            fillDocId(folders);
+            fillDocId(folders,true);
             for (let index = 0; index < folders.length; index++) {
                 const folder = folders[index];
                 if (folder.items){
-                    fillDocId(folder.items);
+                    fillDocId(folder.items,true);
                 } 
             }
-            const list = myShareDB.getFolders();
-            folders = folders.concat(list);
-            myShareDB.setFolders(folders);
-            return echoSuccss(res,{succss: true }); 
+            var result = myShareDB.syncFolders(folders);
+             
+            return echoSuccess(res,{success: true,data :result }); 
         
         }catch(ex){
             console.error("Failed setup folders", ex);
@@ -176,9 +192,10 @@ export const setupApiService = function(app,myShareDB,httpServer){
     const getFoldesApi = '/api/folders'
     app.get(getFoldesApi, (req, res) => {  
         myLogger.debug(`${getFoldesApi} request parameters: ${JSON.stringify(req.query)} `)
-        try{
+        try{ 
             const folders = myShareDB.getFolders();  
-            return echoSuccss(res,{succss: true, data:folders });
+            const vals = Object.values(folders)
+            return echoSuccess(res,{success: true, data:vals });
         
         }catch(ex){
             console.error("Failed get folders", ex);
@@ -187,11 +204,17 @@ export const setupApiService = function(app,myShareDB,httpServer){
         }
     
     });
+    
+    // echo for check api lives 
+    app.get('/api/focusfiles', (req, res) => { 
+        const focusfiles = RuntimeOption.getFocusFilePatterns();
+        echoSuccess(res,{success: true,data:focusfiles });
+    });
 
     // echo for check api lives 
     app.get('/api/info', (req, res) => { 
         const info = myShareDB.toString();
-        echoSuccss(res,{succss: true,data:info });
+        echoSuccess(res,{success: true,data:info });
     });
 
     // refresh doc list, but restart wss server now ~~ #TODO
@@ -200,12 +223,12 @@ export const setupApiService = function(app,myShareDB,httpServer){
         myLogger.debug(`${apiRrefsh} request parameters: ${JSON.stringify(req.query)} `)
         if (1>0){  
             reCreateShareDbServer(httpServer)
-            return echoSuccss(res,{succss: true });
+            return echoSuccess(res,{success: true });
         }
         const { docId} = req.query;
         const success = myShareDB.refreshDoc(docId);
         myLogger.debug('return sucess');
-        return echoSuccss(res,{succss: success });
+        return echoSuccess(res,{success: success });
     }); 
     
 }

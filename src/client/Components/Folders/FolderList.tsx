@@ -7,7 +7,7 @@ import './styles.scss';
 import { getDocList } from "../../api/apiClient.js" 
 
 
-import { DocumentBar,docHandler } from "../DocumentBarWidget";
+import { FolderBar,docHandler } from "../FolderBar";
 import { IRowItem } from "../Base/RowItem"
  
 
@@ -88,7 +88,7 @@ const FolderList = ({
             //   {item.title}🔥
             // </div>
              
-              <DocumentBar documentId={item.id} rowData= {item} onPickRow={handlePickRow} /> 
+              <FolderBar documentId={item.id} rowData= {item} onPickRow={handlePickRow} /> 
             
           )}
         </ViewportList>

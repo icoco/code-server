@@ -3,12 +3,14 @@ import { Collapse } from '@kunukn/react-collapse'
 import React, { Children } from 'react' 
 import { getDocInfoById } from "../../api/apiClient.js" 
 import './styles.scss';
-import { DirectoryArrowSVG } from '../../Icons';
+import { DirectoryArrowSVG } from '../../Icons/index.js';
 import { IRowItem } from '../Base/RowItem.js';
 // import { Tooltip } from 'react-tooltip'
 
-import { Tooltip, OverlayTrigger } from '../../bootstrap';
- 
+import { Tooltip, OverlayTrigger } from '../../bootstrap.js';
+//import TableView from 'react-table-view'
+import { JsonToTable } from "react-json-to-table";
+import './json-table.scss';
 
 export const docHandler = {
   _lastId:null,
@@ -25,20 +27,21 @@ export const docHandler = {
     return this._handler;
   }
 }    
-export const DocumentBar =  (
+export const FolderBar =  (
   {documentId,rowData,onPickRow,children}:
   {documentId: string;rowData:IRowItem|null;  onPickRow:(row:Object)=>void;  children: React.ReactNode;}
   )=> {
   const [isOpen, setIsOpen] = React.useState(false)
   const onToggle = () => setIsOpen((s) => !s)
-  //use check mount status to avoid repeat execute mount event logic 
-  const mountedOnce = React.useRef<boolean>(false);
-
+  
   const [isChecked, setIsChecked] = React.useState(false);
    
   const handlePickRow = React.useCallback((e) => {
     onPickRow(rowData);
   }, [rowData, onPickRow]);
+
+  //use check mount status to avoid repeat execute mount event logic 
+  const mountedOnce = React.useRef<boolean>(false);
 
   const onMountedOnce = ()=>{
     if (mountedOnce.current) {
@@ -49,11 +52,26 @@ export const DocumentBar =  (
         setIsOpen(true); 
     },100) 
   }
-
+  const myJson = {
+    Analyst: { name: "Jack", email: "jack@xyz.com" },
+    "Loaded by": "Jills", 
+    "Jira Ticket": "Foo-1",
+    "Confluence URL": "http://myserver/wxyz",
+    "Study sponsors": [
+      { name: "john", email: "john@@xyz.com" },
+      { name: "jane", email: "jane@@xyz.com" }
+    ]
+  };
+   
   let title = ''; 
   let docPath = '';
   let titleContentClass = 'title-content-short';
   if ( rowData){
+    if (!rowData.data){
+      //rowData.data = myJson;
+    }
+    
+
     title = rowData.name;
     docPath = rowData['path']; 
     if (rowData.items){   
@@ -68,11 +86,11 @@ export const DocumentBar =  (
     }
   }
   
-  //console.debug('repeat ~ render DocumentBar ⚡️')
-
+  //console.debug('repeat ~ render FolderBar ⚡️')
+ 
   return (
           
-    <div className="document-bar ">
+    <div className="folder-bar ">
      
       <div className='name title-row' onClick={onToggle}>
         <div
@@ -126,6 +144,13 @@ export const DocumentBar =  (
             <p>
             path: {docPath}  
             </p> 
+            {
+              rowData && rowData.data?( 
+                <div className="jtable">
+                 <JsonToTable json={rowData.data} /> 
+                 </div>
+              ):null
+            }
           </div> 
           {children}
         </div> 

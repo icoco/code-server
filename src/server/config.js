@@ -1,3 +1,5 @@
+
+
 /**
  *patterns describing which files should e comsidered as ignore files when creating the file tree.
  *
@@ -24,5 +26,7 @@ node_modules/
 code-server-win.exe
 code-server-linux
 code-server-macos
+.DS_Store
 `;
-// ingore self binary app
+//above code: ingore self binary app
+ 

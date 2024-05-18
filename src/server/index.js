@@ -23,8 +23,10 @@ import { myShareDB } from './myShareDB.js';
 import { getPortFromArgs, getWebsiteSpaceFromArgs, getDocumentSpaceFromArgs,prepareSpaceByAsset,getOptionFromArgs } from "./cmdArg.js"
 import { createShareDbServerBindWss,setupApiService } from './apiService.js';
 import { Constants } from './constants.js';
+import { RuntimeOption } from "./runtimeOption.js"
 
-
+//------ gatcher runtime options
+RuntimeOption.setup();
 //------ slient 
 const slientMode = getOptionFromArgs("--slient",null);
 

@@ -1,4 +1,6 @@
 import { useCallback, useContext, useMemo,Suspense } from 'react';
+import path from "path";
+
 import {
   FileId,
   FileTree, 
@@ -22,13 +24,11 @@ import './styles.scss';
 import { backgroundColor } from '../themes/vizhubTheme/colors';
 
 import  React  from 'react';
-import { DocumentBar,docHandler } from "../Components/DocumentBarWidget";
+import { FolderBar,docHandler } from "../Components/FolderBar";
 import { Tooltip as MyToolTip } from 'react-tooltip' 
-
-//const DocumentBar = React.lazy(() => import('../Components/DocumentBarWidget'));
-
-// import Shows from "../components/Shows";
-
+import { isFocusFile } from "../api/runtimeOption.js"
+import { loopFiles } from "./indexHelper.js"
+ 
 
 // TODO turn this UI back on when we are actually detecting
 // the connection status.
@@ -36,7 +36,7 @@ import { Tooltip as MyToolTip } from 'react-tooltip'
 const enableConnectionStatus = true;
 
 export const VZSidebar = ({
-  createFileTooltipText = 'New File',
+  createFileTooltipText = 'New File🚀',
   createDirTooltipText = 'New Directory',
   openSettingsTooltipText = 'Open Settings',
   openKeyboardShortcuts = 'Keyboard Shortcuts',
@@ -61,10 +61,78 @@ export const VZSidebar = ({
     documentId,
   } = useContext(VZCodeContext);
 
-  const fileTree = useMemo(
+  const fileTree_keep = useMemo(
     () => (files ? sortFileTree(getFileTree(files)) : null),
     [files],
   );
+  
+  const fileTree = useMemo(
+    () =>{
+      if (files){
+          return sortFileTree(getFileTree(files))
+      }
+      return null; 
+    },
+    [files],
+  );
+  //--------- begin 
+  //use check mount status to avoid repeat execute mount event logic 
+  const mountedOnce = React.useRef<boolean>(false); 
+
+  const onMountedOnce = ()=>{
+    if (mountedOnce.current) {
+       return ;
+    } 
+    if (!files) return ;
+    mountedOnce.current = true;
+
+    setTimeout(()=>{ 
+      openFocusFile(files);
+    },100) 
+  } 
+
+  const openFocusFile = async (files)=>{ 
+    /*
+      files is a object not array
+      files =
+        { 
+          x:{
+            name:
+            text:
+          }
+          ...
+        }  
+    */
+    loopFiles(files,(x)=>{
+      /*
+        item = {
+          name ,
+          file,
+          fileId,
+          paths
+        }
+      */
+     // console.log(`->onFileItem, filter root file?`,x)
+      const isRootFile = x.paths.length === 1
+      if (!isRootFile){
+        return ;
+      }
+      //only handle root file 
+      if (isFocusFile(x.name)){
+        setTimeout(()=>{
+          const fileId = x.fileId;
+          openTab({ fileId, isTransient: true });
+        }, 100)
+        // break loop immediately 
+        return true;
+      } 
+    }) 
+  } 
+ 
+  console.log('🧐 try onMountedOnce');
+  onMountedOnce();
+  //----- end 
+
   const handleQuestionMarkClick = useCallback(() => {
     setIsDocOpen(true);
   }, []);
@@ -110,8 +178,9 @@ export const VZSidebar = ({
   docHandler.getDocInfoById(documentId);
   const fetchDocumentBar = function(documentId){  
     return (
-      <Suspense fallback={<p>loading...</p>}>
-        <DocumentBar documentId={documentId} rowData={undefined} onPickRow={undefined} ></DocumentBar>
+      <Suspense fallback={<span className='folder-loading'>loading...</span>}>
+        <FolderBar documentId={documentId} rowData={undefined} onPickRow={undefined} children={undefined}> 
+        </FolderBar>
       </Suspense>
     )
   }

@@ -44,24 +44,29 @@ export const myShareDB ={
 
     _docSet:{},
     _docPathSet:{},
+
+    _cachedDocPathSet:{},
     
     /*
-     folders=[{
-        id: ?
-        name:
-        path: 
-        data:
-        items:[
-            {
-                id: ?
-                name:
-                path: 
-                data:
-            }
-        ]
-     }]
+     folders={ 
+        id:x?
+        {
+            id: x?
+            name:
+            path: 
+            data:
+            items:[
+                {
+                    id: ?
+                    name:
+                    path: 
+                    data:
+                }
+            ]
+        }
+    }
     */
-    _folders:[],
+    _folders:{},
 
     toString(){
         const info={ 
@@ -105,6 +110,7 @@ export const myShareDB ={
             myLogger.debug(`cleanupDocSet, by key:${key},value:${value}`);
             this._cleanDocFromSet(value); 
         } 
+        
     },
     
     toDocKey(path){
@@ -118,29 +124,62 @@ export const myShareDB ={
     },
     
     getDocPathById(docId){
-        const path = this._docPathSet[docId];
+        let path = this._docPathSet[docId];
+        if (path){
+            return path; 
+        }   
+        path = this._cachedDocPathSet[docId]
         return path;
     },
     
+    cacheDocPath(docId,docPath){
+        const path = this._cachedDocPathSet[docId];
+        if (path) return ;
+        this._cachedDocPathSet[docId] = docPath;
+    },
+
     setFolders(val){
         this._folders = val;
     },
 
     getFolders(){ 
         var result = this._packActiveDocuments();
-        result = result.concat(this._folders);
+        result = {... result, ... this._folders}
         return result;
     },
 
+    syncFolders(folders){
+        var result =[]
+        for (let index = 0; index < folders.length; index++) {
+            const folder = folders[index];
+            const parentId = folder.parentId
+            if (parentId){
+                const parentFolder = this._folders[parentId];
+                 
+                if (!parentFolder.items){ 
+                    parentFolder.items = []; 
+                }  
+                parentFolder.items.push(folder); 
+                // sub folder do not need return folder id ineed,
+                // now for degug output it 
+                result.push({id:folder.id,path:folder.path})
+                continue
+            } 
+            const key = folder.id
+            this._folders[key] = folder 
+            result.push({id:key,path:folder.path})
+        } 
+        return result;
+    },
     _packActiveDocuments(){
-        var result =[]; 
+        var result ={}; 
         for (const [key, value] of Object.entries(this._docPathSet)) {
             const folder={
                 id :  key,
                 name: key === this._defaultSpaceKey? key : value,
                 path: value
             }
-            result.push(folder);
+           result[key] = folder;
         }
         return result;
     },

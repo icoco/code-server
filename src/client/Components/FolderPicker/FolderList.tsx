@@ -7,7 +7,7 @@ import './styles.scss';
 
 import { getFolderList } from "../../api/apiClient.js"  
 
-import { DocumentBar } from "../DocumentBarWidget";
+import { FolderBar } from "../FolderBar";
 import { IRowItem } from "../Base/RowItem" 
 
 const FolderList = ({
@@ -75,7 +75,7 @@ const FolderList = ({
             //   {item.title}🔥
             // </div>
              
-              <DocumentBar documentId={item.id} rowData= {item} onPickRow={handlePickRow} >
+              <FolderBar documentId={item.id} rowData= {item} onPickRow={handlePickRow} >
                 {/* <div >debug:{JSON.stringify(item.items)}</div>  */}
                 { 
                   item.items ? (
@@ -83,7 +83,7 @@ const FolderList = ({
                   ):(<></>)
                 }
                
-              </DocumentBar> 
+              </FolderBar> 
             
           )}
         </ViewportList>

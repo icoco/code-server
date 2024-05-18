@@ -2,9 +2,16 @@ import { exec } from "child_process";
 import fs from 'fs';
 
 export const myLogger ={ 
-    debug(msg){
-        console.log(`✍️ ${msg}`);
-    }
+  debugMode(){
+    return true;
+  },
+
+  debug(msg){
+      console.debug(`✍️ ${msg}`);
+  },
+  log(msg){
+    console.log(`✍️ ${msg}`);
+}
 }  
 
 export const  openBrowser = function (url) {

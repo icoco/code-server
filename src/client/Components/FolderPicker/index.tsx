@@ -10,6 +10,7 @@ import { Button, Modal, Form } from '../../bootstrap';
 import { ThemeLabel, themes } from '../../themes';
 import { VZCodeContext } from '../../VZCodeContext';
 import { fonts } from '../../Fonts/fonts';
+import './index.scss'; 
 
 import { FolderList } from "./FolderList" 
 import { openDoc } from "../../api/apiClient.js" 
@@ -153,18 +154,20 @@ export const FolderPicker = ({
     const docId = rowData.id;
     openDocumentById(docId);
   }
+  const width =45
 
   return isFoldersOpen ? (
     <Modal
-      // className="vz-settings"
+     
       show={isFoldersOpen}
       onHide={closeFolders}
       animation={false}
+    
     >
       <Modal.Header closeButton>
         <Modal.Title>🗂️ Folders</Modal.Title>
       </Modal.Header>
-      <Modal.Body> 
+      <Modal.Body > 
         <FolderList items={folders} onPickRow={onPickRow} isDoc={false} />
       </Modal.Body>
       <Modal.Footer>

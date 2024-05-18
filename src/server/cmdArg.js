@@ -82,6 +82,9 @@ export const getDocumentSpaceFromArgs = function (defaultVal = "space") {
 //  "--slient=true"  => "true"
 // 
 export const getOptionFromArgs = function(name, defaultVal) {
+  if (!name.endsWith("=")){
+    name = name + "="
+  }
   var val = process.argv.find((arg) =>
     arg.startsWith(name),
   );
@@ -90,6 +93,7 @@ export const getOptionFromArgs = function(name, defaultVal) {
   }
   return defaultVal;
 }
+
  
 export const prepareSpaceByAsset = function(assetName,toSpace){
   // const to = path.join(toSpace,assetName);

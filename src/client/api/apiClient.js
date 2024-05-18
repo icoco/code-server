@@ -54,7 +54,13 @@ export const getFolderList = async ()=>{
    const api = `/api/folders?&ts=${ts}`
    return await fetch(api);
     
- } 
+} 
  
  
- 
+export const getFocusFilePatterns = async ()=>{  
+   
+  const ts = Date.now()
+  const api = `/api/focusfiles?&ts=${ts}`
+  return await fetch(api);
+   
+}  
