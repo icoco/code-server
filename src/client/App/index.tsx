@@ -1,3 +1,4 @@
+import React from 'react' 
 import { useContext,Suspense } from 'react';
 import ShareDBClient from 'sharedb-client-browser/dist/sharedb-client-umd.cjs';
 import { json1Presence } from '../../ot';
@@ -98,6 +99,7 @@ function App() {
   // in the same browser window as the VZCode editor,
   // so that multiple browser windows are not required.
   const enableRightPanel = true;
+ 
 
   return (
     <SplitPaneResizeProvider>
@@ -115,8 +117,8 @@ function App() {
       >
         <div className="app">
           <VZLeft />
-          <VZMiddle allowGlobals={true} />
-          {enableRightPanel ? <VZRight /> : null}
+          <VZMiddle allowGlobals={true}  />
+          {enableRightPanel  ? <VZRight /> : null}
           <VZResizer side="left" />
           {enableRightPanel ? (
             <VZResizer side="right" />

@@ -28,7 +28,7 @@ export const loopFiles = (files,onFileItem) => {
           fileId,
           paths, 
         }  
-      
+        console.debug('🧐 loopFiles, item?', item)
         if (onFileItem(item)){
           return true;
         } 

@@ -13,7 +13,7 @@ export const handleMessageUpdateContent = async ({
   setFile,
 }) => {
   if (debug) {
-    console.log('update-content message received');
+    console.log('update-content message received',data);
   }
   // Unpack the files
   const content: VZCodeContent = data.details;

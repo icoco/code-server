@@ -7,11 +7,13 @@ import WebSocketJSONStream from '@teamwork/websocket-json-stream';
 import { myLogger } from './utils.js';
 import { myShareDB } from './myShareDB.js';
 import { RuntimeOption } from './runtimeOption.js'
+import morgan  from "morgan"
+import  finalhandler  from "finalhandler"
+
 
 function echoError(res,data,errCode){
     if (errCode){
-      return res.status(errCode).send(data);
-       
+      return res.status(errCode).send(data); 
     }
     return res.status(500).send(data);
   }
@@ -20,6 +22,7 @@ function echoSuccess(res,data){
     res.header('Content-Type', 'application/json;charset=utf-8') 
     return res.status(200).send(data);
 }
+ 
 
 export const setupApiService = function(app,myShareDB,httpServer){ 
 
@@ -27,22 +30,24 @@ export const setupApiService = function(app,myShareDB,httpServer){
     
     app.use(express.json());
 
-    app.use(express.json({limit: '999mb'}));
-    app.use(express.urlencoded({limit: '999mb', extended: true, parameterLimit: 50000}));
-    
-    
+    // app.use(express.json({limit: '999mb'}));
+    // app.use(express.urlencoded({limit: '999mb', extended: true, parameterLimit: 50000}));
+    if (myLogger.debugMode()){
+        app.use(morgan('combined' ))
+
+    }
     /*
         open doc folder then trigger render on web page
-        eg: http://localhost:3030/open/?dir=/workspace/code/src
+        eg: http://localhost:3030/open?dir=/workspace/code/src&file=welcome.md
     */
-    app.get('/open', (req, res) => { 
-        myLogger.debug(` /open: ${JSON.stringify(req.query)} `) 
+    app.get('/open', (req, res) => {  
+        
         let   dir  = req.query['dir'];
-        let  docId  = req.query['docId'];
-        myLogger.debug(`dir:${dir},docId:${docId} `) 
+        let  docId  = req.query['docId']; 
         if (!dir && !docId){
             return  echoError(res,{'error':`invlidate input:${JSON.stringify(req.query)}`}) ;
         } 
+        let file = req.query['file']; 
         try{
 
             if (!dir){
@@ -51,21 +56,23 @@ export const setupApiService = function(app,myShareDB,httpServer){
             const doc = myShareDB.openDoc(dir,true); 
             docId = doc.id;
             const ts = Date.now()
-            res.redirect (`/?docId=${docId}&ts=${ts}`)
+            let url = `/?docId=${docId}&ts=${ts}`
+            if (file){
+                url = url + `&file=${file}`
+            }
+            res.redirect (url)
             return ;            
         
         }catch(ex){
             console.error("Failed openDoc", ex);
-            //return echoError(res,{'error':ex.toString()}) ; 
-        }
-    
+            return echoError(res,{'error':ex.toString()}) ; 
+        } 
     }); 
     /*
         http://localhost:3030/api/open/?dir=/workspace/code/src
     */ 
-    app.get('/api/open', (req, res) => { 
-        myLogger.debug(` api->open: ${JSON.stringify(req.query)} `) 
-        //res.send(req.query);
+    app.get('/api/open', (req, res) => {  
+       
         const { dir} = req.query;
         if (!dir){
             return  echoError(res,{'error':"invlidate input"}) ;
@@ -130,9 +137,7 @@ export const setupApiService = function(app,myShareDB,httpServer){
     */ 
    const postFoldersApi = '/api/folders';
     app.post(postFoldersApi, (req, res) => { 
-        if (myLogger.debugMode()){
-            myLogger.debug(`${postFoldersApi} request : ${JSON.stringify(req.body)} `)
-        } 
+         
         const ts = Date.now();
         let params = {
             folders:[
@@ -191,7 +196,7 @@ export const setupApiService = function(app,myShareDB,httpServer){
 */  
     const getFoldesApi = '/api/folders'
     app.get(getFoldesApi, (req, res) => {  
-        myLogger.debug(`${getFoldesApi} request parameters: ${JSON.stringify(req.query)} `)
+        
         try{ 
             const folders = myShareDB.getFolders();  
             const vals = Object.values(folders)
@@ -216,11 +221,12 @@ export const setupApiService = function(app,myShareDB,httpServer){
         const info = myShareDB.toString();
         echoSuccess(res,{success: true,data:info });
     });
+     
 
     // refresh doc list, but restart wss server now ~~ #TODO
     const apiRrefsh ='/api/refresh';
     app.get(apiRrefsh, (req, res) => { 
-        myLogger.debug(`${apiRrefsh} request parameters: ${JSON.stringify(req.query)} `)
+     
         if (1>0){  
             reCreateShareDbServer(httpServer)
             return echoSuccess(res,{success: true });

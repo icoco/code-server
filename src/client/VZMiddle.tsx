@@ -51,7 +51,18 @@ export const VZMiddle = ({
     setIsClient(true);
   }, []);
 
-  return activeFileId !== null ? (
+  //---- appManager effect
+  // const [isLoading, setIsLoading] = useState(false);
+  // useEffect(() => {
+  //   const appManager = globalThis.appManager;
+  //   if (!appManager) return;
+    
+  //   const status = appManager.getStatus();
+  //   let busy = status ? status.busy : false;
+  //   setIsLoading(busy);
+  // }, []);
+
+  return activeFileId !== null  ? (
     <div
       className="middle"
       style={{ width: codeEditorWidth + 'px' }}

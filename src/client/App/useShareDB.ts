@@ -9,7 +9,7 @@ export const getRequestDocId = function(){
   const args = Request.getParameters();
   const docId = args['docId'];
  
-  return docId ? docId : 'homeSpace';
+  return docId ? docId : 'HomeSpace';
 }
 
 // Set up the connection to ShareDB.

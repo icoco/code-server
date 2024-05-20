@@ -75,8 +75,8 @@ async function ensureFileSystemInitialized() {
 }
 
 onmessage = async ({ data }) => {
-  if (debug) {
-    console.log('message received');
+  if (debug || true) {
+    console.log(`message received`,data);
   }
 
   // Ensure the file system is initialized.
@@ -89,11 +89,16 @@ onmessage = async ({ data }) => {
 
   switch (data.event) {
     case 'update-content':
-      await handleMessageUpdateContent({
-        debug,
-        data,
-        setFile,
-      });
+      try{
+        await handleMessageUpdateContent({
+          debug,
+          data,
+          setFile,
+        });
+      }catch(ex){
+        console.trace("update-content->error ?",ex) 
+        throw ex; 
+      }
       break;
 
     case 'autocomplete-request':

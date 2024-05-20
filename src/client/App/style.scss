@@ -17,7 +17,21 @@
     44,
     52
   ); /* Variable for the background color */
+
+
+  --vz-text-color: white;
+
+ 
+  --trace-red-color: red;
+  --trace-yellow-color: yellow;
+  --trace-blue-color: blue;
+  --trace-green-color: rgba(15, 246, 38, 0.959);
+
+  --trace-boder-style: dashed;
+  --trace-border-width: 2px;
 }
+
+ 
 
 /* Scrollbar Styles */
 ::-webkit-scrollbar {
@@ -77,6 +91,12 @@ body,
       width: 100%;
       height: 100%;
       border: none;
+    }
+
+    layout-bottom{
+      display: flex;
+      justify-content: center;
+      align-items: center; 
     }
   }
 }

@@ -67,6 +67,9 @@ export const usePrettier = ({
     // Get the message that comes back from the worker.
     // This is the prettified text for a specific file.
     const handleMessage = (event) => {
+      
+      console.debug('handleMessage->?',event);
+
       const { fileId, error, fileTextPrettified } =
         event.data;
 

@@ -1,6 +1,14 @@
 import { getFocusFilePatterns } from './apiClient.js'
 
 
+globalThis.csDebugMode = true;
+
+
+export const AppConfig={
+  appName: "Coder Server☁️🔨"
+}
+
+
 export const RuntimeOption={
 
     _focusFilePatterns:['welcome.md'],

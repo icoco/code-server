@@ -31,12 +31,25 @@ export const useTypeScript = ({
       if (content === null) {
         return;
       }
+      //@step  
+      try{ 
+        !content.files;
+      }catch(ex){
+       // console.error("🔥 capture error ?,", this);
+        globalThis.appManager.onError(ex,"debounceUpdateContent");
+      }
+      
+      //
       clearTimeout(debounceTimeoutId.current);
       debounceTimeoutId.current = window.setTimeout(() => {
-        typeScriptWorker.postMessage({
-          event: 'update-content',
-          details: content,
-        });
+        
+          typeScriptWorker.postMessage({
+            event: 'update-content',
+            details: content 
+          });
+         
+       
+
       }, sendMessageDebounceTimeMS);
     },
     [typeScriptWorker],
@@ -46,3 +59,5 @@ export const useTypeScript = ({
     debounceUpdateContent(content);
   }, [content]);
 };
+
+ 

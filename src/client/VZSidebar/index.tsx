@@ -28,12 +28,20 @@ import { FolderBar,docHandler } from "../Components/FolderBar";
 import { Tooltip as MyToolTip } from 'react-tooltip' 
 import { isFocusFile } from "../api/runtimeOption.js"
 import { loopFiles } from "./indexHelper.js"
- 
+import { Request }  from "../utils/Request.js"; 
 
 // TODO turn this UI back on when we are actually detecting
 // the connection status.
 // See https://github.com/vizhub-core/vzcode/issues/456
 const enableConnectionStatus = true;
+
+const getOpenFile = function(){
+  const args = Request.getParameters();
+  const docId = args['docId']; 
+  if (!docId) return null;  
+  const file = args['file']; 
+  return file 
+}
 
 export const VZSidebar = ({
   createFileTooltipText = 'New File🚀',
@@ -86,12 +94,37 @@ export const VZSidebar = ({
     if (!files) return ;
     mountedOnce.current = true;
 
+    const targetFile = getOpenFile()
+    if (targetFile){
+      setTimeout(()=>{ 
+        openTargetFile(files,targetFile)
+      },100) 
+      
+      return ;
+    }
     setTimeout(()=>{ 
-      openFocusFile(files);
+      openDefaultFocusFile(files);
     },100) 
   } 
 
-  const openFocusFile = async (files)=>{ 
+  const openTargetFile = async (files, targetFile)=>{ 
+    console.debug('🧐 try openTargetFile ?',targetFile)
+    loopFiles(files,(x)=>{ 
+      
+      if (x.file.name === targetFile){
+        console.debug('🧐 match ?')
+        setTimeout(()=>{
+          const fileId = x.fileId;
+          openTab({ fileId, isTransient: true });
+        }, 100)
+        // break loop immediately 
+        return true;
+      } 
+    }) 
+  } 
+
+  const openDefaultFocusFile = async (files)=>{ 
+    console.debug('🧐 try openDefaultFocusFile ?')
     /*
       files is a object not array
       files =

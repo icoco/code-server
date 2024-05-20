@@ -1,4 +1,4 @@
 //Constants 
 export const Constants={
-    homeSpace: "homeSpace"
+    homeSpace: "HomeSpace"
 }
