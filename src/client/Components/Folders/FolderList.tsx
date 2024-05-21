@@ -88,7 +88,7 @@ const FolderList = ({
             //   {item.title}🔥
             // </div>
              
-              <FolderBar documentId={item.id} rowData= {item} onPickRow={handlePickRow} /> 
+              <FolderBar key={item.id} documentId={item.id} rowData= {item} onPickRow={handlePickRow} /> 
             
           )}
         </ViewportList>

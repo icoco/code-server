@@ -11,9 +11,7 @@ export const Spinner =  (
   )=> {
   const ref = React.useRef();
 
-  const [isOpen, setIsOpen] = React.useState(false)
-  const onToggle = () => setIsOpen((s) => !s)
-   
+  const [isOpen, setIsOpen] = React.useState(false) 
 
   //use check mount status to avoid repeat execute mount event logic 
   const mountedOnce = React.useRef<boolean>(false);
@@ -31,18 +29,17 @@ export const Spinner =  (
   React.useEffect(() => {  
     const self = ref.current; 
     return () => {};
-  }, []);
-
-
+  }, []); 
   console.log('🔥 Spinner render')
+
   return (
   
   <div className='main-layout-box' style={{display: (display) ? "inline-flex" : "none"}} >  
           
       <div className='layout-content'>
           <div className='spinner-box'>
-            <div style={{display:'block'}}>
-              <div className='spinner-loader' style={{display:  (loading) ? "block" : "block"}}>
+            <div style={{display: (display) ? "block" : "none"}}>
+              <div className='spinner-loader' style={{display:  (loading) ? "block" : "none"}}>
                     {brandText}
                 </div> 
               <div className='spinner-tip'>{tips}</div> 
@@ -53,8 +50,7 @@ export const Spinner =  (
       <div className='layout-footer'> 
           {children}
       </div>       
-        
-      
+         
   </div>
     
   )

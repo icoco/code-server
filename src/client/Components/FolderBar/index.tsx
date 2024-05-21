@@ -28,8 +28,8 @@ export const docHandler = {
   }
 }    
 export const FolderBar =  (
-  {documentId,rowData,onPickRow,children}:
-  {documentId: string;rowData:IRowItem|null;  onPickRow:(row:Object)=>void;  children: React.ReactNode;}
+  {key,documentId,rowData,onPickRow,children}:
+  {key:string, documentId: string;rowData:IRowItem|null;  onPickRow:(row:Object)=>void;  children: React.ReactNode;}
   )=> {
   const [isOpen, setIsOpen] = React.useState(false)
   const onToggle = () => setIsOpen((s) => !s)
@@ -90,7 +90,7 @@ export const FolderBar =  (
  
   return (
           
-    <div className="folder-bar ">
+    <div key={documentId} className="folder-bar ">
      
       <div className='name title-row' onClick={onToggle}>
         <div

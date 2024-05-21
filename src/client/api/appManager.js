@@ -9,7 +9,8 @@ const AppManager ={
         return this._status;
     },
 
-    setStatus(busy,text="Code Server ☁️🔨"){ 
+    setStatus(busy,text=""){ 
+        console.debug('AppManager->setStatus',busy,text);
         const status = {
             busy:busy,
             text:text

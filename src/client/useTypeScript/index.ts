@@ -34,6 +34,7 @@ export const useTypeScript = ({
       //@step  
       try{ 
         !content.files;
+        globalThis.appManager.setStatus(false);
       }catch(ex){
        // console.error("🔥 capture error ?,", this);
         globalThis.appManager.onError(ex,"debounceUpdateContent");

@@ -19,18 +19,19 @@ export const VZRight = () => {
   const { 
     activeFileId, 
   } = React.useContext(VZCodeContext);
+
   React.useEffect(() => {
     display.current = !activeFileId;
     console.debug('🧐 useEffect->activeFileId?', activeFileId)
-    forceAdjustLayout();
+    renderByAppStatus();
   });
   //---- appManager status effect
   const [isLoading, setIsLoading] = React.useState(false);
   const tips = React.useRef<string>( AppConfig.appName);
 
-  const renderAppStatus =()=>{
+  const renderByAppStatus =()=>{
     const appManager = globalThis.appManager;
-    console.debug('effect check status, this?,appManager? ', this,appManager,)
+    console.debug('effect check status, this?,appManager? ', appManager)
     if (!appManager) return;
     
     const status = appManager.getStatus();
@@ -42,14 +43,11 @@ export const VZRight = () => {
      
     forceAdjustLayout();
   }
-  React.useEffect(() => {
-    renderAppStatus(); 
-   
-  }, []);
+ 
   
   const appManager = globalThis.appManager;
   appManager.registerListener("on_status_updated",(x)=>{
-    renderAppStatus();
+    renderByAppStatus();
   });
  
   const forceAdjustLayout=()=>{
@@ -64,21 +62,22 @@ export const VZRight = () => {
     }else{
       middle.style.width= "0";
     }
+    
   }
   
   const onClickHome=()=>{
       const location = window.location ; 
-      let baseUrl = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '') + '/';
-
+      let baseUrl = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '') + '/'; 
       window.location.href = baseUrl;
   }
+
   return (
     <div className="right" >
       {enableIframe ? (
         <iframe src="http://localhost:5173/"></iframe>
       ) : null}
       <Spinner display={display.current} loading={isLoading} brandText=""  tips={tips.current}>
-        <div className='layout-bottom' style={{height:'100px', cursor:'pointer'}} title="Back to home" onClick={onClickHome}>
+        <div className='layout-bottom' style={{marginBottom:'15px', cursor:'pointer'}} title="Back to home" onClick={onClickHome}>
           {AppConfig.appName} 
         </div>
       </Spinner>

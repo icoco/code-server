@@ -12,6 +12,13 @@ export const getRequestDocId = function(){
   return docId ? docId : 'HomeSpace';
 }
 
+const onDocReady=()=>{ 
+  // ---- appManager effect 
+  const appManager = globalThis.appManager;
+  if (!appManager) return; 
+  appManager.setStatus(false);
+    
+}
 // Set up the connection to ShareDB.
 export const useShareDB = ({
   connection,
@@ -76,7 +83,8 @@ export const useShareDB = ({
       // Listen for all changes and update `data`.
       // This decouples rendering logic from ShareDB.
       // This callback gets called on each change.
-      shareDBDoc.on('op', () => {
+      shareDBDoc.on('op', (x) => {
+
         // TODO consider excluding file contents from this,
         // because currently we are re-rendering the entire
         // document on each file change (each keystroke while editing).
@@ -85,7 +93,10 @@ export const useShareDB = ({
         // The Sidebar only needs to know file names, not contents.
         setContent(shareDBDoc.data);
       });
-
+      //@@
+      // shareDBDoc.on('load', (x) => { 
+      //   console.debug('👂 shareDBDoc on load, documentId? x?', documentId,x)
+      // });
       // Set up presence.
       // See https://github.com/share/sharedb/blob/master/examples/rich-text-presence/client.js#L53
       const docPresence = connection.getDocPresence(

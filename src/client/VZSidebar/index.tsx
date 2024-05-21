@@ -57,7 +57,6 @@ export const VZSidebar = ({
   openKeyboardShortcuts?: string;
 }) => {
   const {
-    spaceName,
     files,
     openTab,
     setIsSettingsOpen,
