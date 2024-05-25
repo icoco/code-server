@@ -1,8 +1,8 @@
-# CodeServer☁️🔨: Online Code Editor
+# CodeServer☁️🔨:  Online Code Editor
 
 CodeServer offers an online code editing environment, help you write code anywhere ~
 
-![UI](show/editor.gif)
+![UI](readme-demo.gif)
 
 ## Table of Contents
 
