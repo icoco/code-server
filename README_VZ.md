@@ -1,56 +1,39 @@
-# CodeServer☁️🔨: Online Code Editor
-
-CodeServer offers an online code editing environment, help you write code anywhere ~
-
-![UI](show/editor.gif)
-
-## Table of Contents
-
-- [Development](#development)
- 
-
-## Development
- 
-
-- **Local Setup**:
-
-  ```bash
-  cd code-server
-  npm install
-
-  ```
-
-- **Build Setup**:
-  1) build web page out to folder 'dist' :
-  ```
-  npm run build 
-  ```
-  1.1) dev start server
-  ```
-  npm run start-server
-  ```
-
-  2) build socket server out to folder 'dist_server' :
-    ```
-    npm run build-server
-    ```
-
-  3) pkg  out to folder 'dist_server_bin' :
-
-    ```
-    npm run pkg-release
-    
-    ```
-
-  then all executeable program was build in folder 'dist_server_bin'
- 
-
-# forked 
+# forked purpose 🔨
 <details>
+
+<summary>Tips for forked</summary>
+
+### pkg as execute program 
+
+1) build web page out to folder 'dist' :
+```
+npm run build 
+```
+1.1) dev start server
+```
+npm run start-server
+```
+
+2) build socket server out to folder 'dist_server' :
+```
+npm run build-server
+```
+
+2) pkg  out to folder 'dist_server_bin' :
+
+```
+npm run pkg-go
+ 
+```
+
+then all executeable program was build in folder 'dist_server_bin'
+ 
+
+</details>
 
 # VZCode: Multiplayer Code Editor
 
- ![VZCode](https://github.com/vizhub-core/vzcode) offers a multiplayer code editing environment that caters to a real-time collaborative development experience. It's the code editor component of [VizHub](https://vizhub.com/), and can also be used independently from VizHub.
+VZCode offers a multiplayer code editing environment that caters to a real-time collaborative development experience. It's the code editor component of [VizHub](https://vizhub.com/), and can also be used independently from VizHub.
 
 ![VZCode Interface](https://github.com/vizhub-core/vzcode/assets/68416/1812f25c-66b4-49bb-a04f-4474eb30e32b)
 
@@ -205,5 +188,3 @@ VZCode is inspired by [VizHub v2](https://github.com/vizhub-core/vizhub/). VizHu
 - [VizHub Discord](https://discord.com/invite/wbtJ7SCtYr)
 - [GitHub Repository](https://github.com/vizhub-core/vzcode)
 - [Discord Channel within RCOS](https://discord.com/channels/738593165438746634/1066068656045441044)
-
-</details>
