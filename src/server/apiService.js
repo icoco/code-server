@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import { WebSocketServer } from 'ws';
 import WebSocketJSONStream from '@teamwork/websocket-json-stream';
 
-import { myLogger } from './utils.js';
+import { myLogger } from './myLogger.js';
 import { myShareDB } from './myShareDB.js';
 import { RuntimeOption } from './runtimeOption.js'
 import morgan  from "morgan"
@@ -53,7 +53,7 @@ export const setupApiService = function(app,myShareDB,httpServer){
             if (!dir){
               dir =  myShareDB.getDocPathById(docId); 
             }
-            const doc = myShareDB.openDoc(dir,true); 
+            const doc = myShareDB.fetchDoc(dir,true); 
             docId = doc.id;
             const ts = Date.now()
             let url = `/?docId=${docId}&ts=${ts}`
@@ -64,29 +64,35 @@ export const setupApiService = function(app,myShareDB,httpServer){
             return ;            
         
         }catch(ex){
-            console.error("Failed openDoc", ex);
+            myLogger.debug("Failed fetchDoc", ex);
             return echoError(res,{'error':ex.toString()}) ; 
         } 
     }); 
     /*
-        http://localhost:3030/api/open/?dir=/workspace/code/src
+        http://localhost:3030/api/fetch/?dir=/workspace/code/src
+        http://localhost:3030/api/fetch/?docId=HomeSpace
     */ 
-    app.get('/api/open', (req, res) => {  
+    app.get('/api/fetch', (req, res) => {  
        
-        const { dir} = req.query;
-        if (!dir){
-            return  echoError(res,{'error':"invlidate input"}) ;
+        let   dir  = req.query['dir'];
+        let  docId  = req.query['docId']; 
+        if (!dir && !docId){
+            return  echoError(res,{'error':`invlidate input:${JSON.stringify(req.query)}`}) ;
         } 
+         
         try{
-            const doc = myShareDB.openDoc(dir); 
+            if (!dir){
+                dir =  myShareDB.getDocPathById(docId); 
+            }
+            const doc = myShareDB.fetchDoc(dir); 
             
-            myLogger.debug(`ShareDB.openDoc:${doc}`);
+            myLogger.debug(`ShareDB.fetchDoc:${doc}`);
             myLogger.debug(`ShareDB:${myShareDB}`);
         
             return echoSuccess(res,{success: true, doc:doc });
         
         }catch(ex){
-            console.error("Failed openDoc", ex);
+            myLogger.debug("Failed fetchDoc", ex);
             return echoError(res,{'error':ex.toString()}) ;   
             
         }
@@ -173,7 +179,7 @@ export const setupApiService = function(app,myShareDB,httpServer){
             return echoSuccess(res,{success: true,data :result }); 
         
         }catch(ex){
-            console.error("Failed setup folders", ex);
+            myLogger.debug("Failed setup folders", ex);
             return echoError(res,{'error':ex.toString()}) ;  
         }
     
@@ -203,7 +209,7 @@ export const setupApiService = function(app,myShareDB,httpServer){
             return echoSuccess(res,{success: true, data:vals });
         
         }catch(ex){
-            console.error("Failed get folders", ex);
+            myLogger.debug("Failed get folders", ex);
             return echoError(res,{'error':ex.toString()}) ;   
             
         }
@@ -250,7 +256,7 @@ const reCreateShareDbServer = function(httpServer){
     for (const [key, value] of Object.entries(docPathSet)) {
         myLogger.debug(`reCreateShareDbServer->loop docPathSet, by key:${key},value:${value}`);
         myShareDB._cleanDocFromSet(value);
-        myShareDB.openDoc(value);
+        myShareDB.fetchDoc(value);
     } 
 }
 
@@ -270,12 +276,12 @@ export const createShareDbServerBindWss = function(server){
 
         // Prevent server crashes on errors.
         clientStream.on('error', (error) => {
-            console.log('clientStream error: ' + error.message);
+            myLogger.debug('clientStream error: ' + error.message);
         });
 
         // Handle errors
         ws.on('error', (error) => {
-            console.log('ws error: ' + error.message);
+            myLogger.debug('ws error: ' + error.message);
         });
 
         // Handle disconnections

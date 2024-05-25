@@ -1,4 +1,5 @@
 import { getOptionFromArgs } from './cmdArg.js'
+import { myLogger } from './myLogger.js';
 
 export const RuntimeOption={
 
@@ -6,7 +7,7 @@ export const RuntimeOption={
   
     appendFocusFilePatterns(vals){
       this._focusFilePatterns = this._focusFilePatterns.concat(vals);
-      console.log('appendFocusFilePatterns',this._focusFilePatterns)
+      myLogger.debug('appendFocusFilePatterns',this._focusFilePatterns)
     },
     getFocusFilePatterns(){
       return this._focusFilePatterns;

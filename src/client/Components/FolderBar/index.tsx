@@ -12,6 +12,12 @@ import { Tooltip, OverlayTrigger } from '../../bootstrap.js';
 import { JsonToTable } from "react-json-to-table";
 import './json-table.scss';
 
+const trimHolderInfo=(title)=>{ 
+    title = title.replace('/Users/icoco','')
+    title = title.replace('/WorkSpace/2024/prj/odoo/odoo-space-17','')
+    title = title.replace('/WorkSpace/2024/prj/odoo/kit/git','/WorkSpace')
+    return title;
+}
 export const docHandler = {
   _lastId:null,
   _handler:null,
@@ -73,6 +79,7 @@ export const FolderBar =  (
     
 
     title = rowData.name;
+    
     docPath = rowData['path']; 
     if (rowData.items){   
       onMountedOnce();
@@ -85,7 +92,10 @@ export const FolderBar =  (
       docPath =  response.data.path;
     }
   }
-  
+  //@step
+  title = trimHolderInfo(title); 
+  docPath = trimHolderInfo(docPath);
+
   //console.debug('repeat ~ render FolderBar ⚡️')
  
   return (

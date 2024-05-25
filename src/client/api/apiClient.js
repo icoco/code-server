@@ -17,6 +17,13 @@ export const  openDoc = async(docId)=>{
    
 }
 
+export const  preloadDoc = async(docId)=>{  
+  const ts = Date.now() 
+  const api = `/api/fetch?docId=${docId}&ts=${ts}`;
+  console.debug('🧐 preloadDoc',api)
+  fetch(api); 
+}
+
 export const reloadDocThen = ()=>{ 
   
   const docId = getRequestDocId();

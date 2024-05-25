@@ -1,18 +1,6 @@
 import { exec } from "child_process";
 import fs from 'fs';
-
-export const myLogger ={ 
-  debugMode(){
-    return true;
-  },
-
-  debug(msg){
-      console.debug(`✍️ ${msg}`);
-  },
-  log(msg){
-    console.log(`✍️ ${msg}`);
-}
-}  
+import { myLogger } from './myLogger.js'; 
 
 export const  openBrowser = function (url) {
      
@@ -54,7 +42,7 @@ const cp = function(from, to){
         recursive: true,
       });
     } catch (error) {
-      console.error(error.message);
+      myLogger.error(error.message);
     }
 }
   

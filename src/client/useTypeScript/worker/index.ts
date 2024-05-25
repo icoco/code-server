@@ -75,7 +75,7 @@ async function ensureFileSystemInitialized() {
 }
 
 onmessage = async ({ data }) => {
-  if (debug || true) {
+  if (debug ) {
     console.log(`message received`,data);
   }
 

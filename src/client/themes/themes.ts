@@ -8,9 +8,10 @@ import { material } from '@uiw/codemirror-theme-material';
 import { nord } from '@uiw/codemirror-theme-nord';
 import { xcodeLight } from '@uiw/codemirror-theme-xcode';
 import { vizhubTheme } from './vizhubTheme';
-
+import { codeServer } from './csTheme';
 // CodeMirror themes
 export type ThemeLabel =
+  | 'code☁️🔨'
   | 'abcdef'
   | 'dracula'
   | 'eclipse'
@@ -28,6 +29,7 @@ export type ThemeOption = {
 };
 
 export const themes: Array<ThemeOption> = [
+  { value: codeServer, label: 'code☁️🔨' },
   { value: abcdef, label: 'abcdef' },
   { value: dracula, label: 'dracula' },
   { value: eclipse, label: 'eclipse' },
@@ -53,4 +55,4 @@ export const themeOptionsByLabel: Record<
 );
 
 // The default theme
-export const defaultTheme: ThemeLabel = 'vizhub';
+export const defaultTheme: ThemeLabel = 'code☁️🔨';

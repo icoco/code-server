@@ -1,3 +1,3 @@
-# hello Code Server ☁️🔨~
+# Hello Code ☁️🔨~
 
 [code-server](https://github.com/icoco/code-server)

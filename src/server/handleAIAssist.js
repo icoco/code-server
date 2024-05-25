@@ -1,4 +1,5 @@
 //import { generateAIResponse } from './generateAIResponse.js';
+import { myLogger } from './myLogger.js';
 
 const debug = false;
 
@@ -7,12 +8,12 @@ export const handleAIAssist =
     const { inputText, insertionCursor, fileId } = req.body;
 
     if (debug) {
-      console.log('[handleAIAssist] inputText:', inputText);
-      console.log(
+      myLogger.debug('[handleAIAssist] inputText:', inputText);
+      myLogger.debug(
         '[handleAIAssist] insertionCursor:',
         insertionCursor,
       );
-      console.log('[handleAIAssist] fileId:', fileId);
+      myLogger.debug('[handleAIAssist] fileId:', fileId);
     }
 
     try { //@@ ignore it 
@@ -27,7 +28,7 @@ export const handleAIAssist =
         .status(200)
         .send({ message: 'Operation successful!' });
     } catch (error) {
-      console.error('handleAIAssist error:', error);
+      myLogger.debug('handleAIAssist error:', error);
       res.status(500).send({
         message: 'Internal Server Error',
         error: error.message,

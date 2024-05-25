@@ -67,6 +67,12 @@ class Request
     { 
       updateUrlParameter(key,value)
     } 
+    static isRootPath(){
+      const search = location.search
+      const path = location.pathname
+      console.log('isRoot?', search,path)
+      return !search & (!path || path === '/') ;
+    }
 }
 
 export {Request};

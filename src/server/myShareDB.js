@@ -9,7 +9,7 @@ import { json1Presence } from '../ot.js';
 import { computeInitialDocument } from './computeInitialDocument.js';
 //import { handleAIAssist } from './handleAIAssist.js';
 import { isDirectory } from './isDirectory.js';
-import { myLogger } from './utils.js';
+import { myLogger } from './myLogger.js';
 import jsSHA  from "jssha";
 import { Constants } from './constants.js';
 
@@ -124,6 +124,9 @@ export const myShareDB ={
     },
     
     getDocPathById(docId){
+        if (docId === this._defaultSpaceKey){
+            return this._defaultSpacePath;
+        }
         let path = this._docPathSet[docId];
         if (path){
             return path; 
@@ -181,6 +184,16 @@ export const myShareDB ={
             }
            result[key] = folder;
         }
+        const key = this._defaultSpaceKey;
+        const path = this._defaultSpacePath;
+        if (!result[key]){
+            const folder={
+                id :  key,
+                name: key,
+                path: path
+            }
+           result[key] = folder;
+        }
         return result;
     },
     /*
@@ -188,16 +201,17 @@ export const myShareDB ={
              key:
             }
     */
-    openDoc(path,forceReload=false){  
+    fetchDoc(path,forceReload=false){  
         // Create the initial "document",
         // which is a representation of files on disk.
         if (!this._shareDBConnection){
             this._shareDBConnection = this._shareDBBackend.connect();
         } 
+        myLogger.info('fetchDoc',path)
         // forceReload 
         if (forceReload){
-            myLogger.debug('openDoc,forceReload')
-            this._cleanDocFromSet(path)
+            //myLogger.debug('fetchDoc,forceReload')
+           // this._cleanDocFromSet(path)
         }
         let key = this.toDocKey(path)
         const existDoc = this._docSet[key];
@@ -218,7 +232,7 @@ export const myShareDB ={
         if (!shareDBDoc){
             return ; 
         }
-        myLogger.debug(`_cleanDocFromSet, path:${path}`);
+        myLogger.info(`cleanDocFromSet, path:${path}`);
         shareDBDoc.unsubscribe();
         shareDBDoc.del();
         shareDBDoc.destroy();
@@ -275,7 +289,7 @@ export const myShareDB ={
                 },
                 (error) => {
                     if (error) {
-                    console.log(error);
+                        myLogger.error(error);
                     }
                 },
                 );
@@ -290,7 +304,7 @@ export const myShareDB ={
         // let timeout;
         // shareDBDoc.subscribe(() => {
         //   shareDBDoc.on('op', () => {
-        //     // console.log(shareDBDoc.data.isInteracting);
+        //     // myLogger.debug(shareDBDoc.data.isInteracting);
         //     clearTimeout(timeout);
         //     timeout = setTimeout(save, autoSaveDebounceTimeMS);
         //   });
@@ -346,7 +360,7 @@ export const myShareDB ={
         const from = previous ? getFullPath(docSpacePath,previous.name): null; 
         const to = current ? getFullPath(docSpacePath,current.name): null; 
         if (from != to){
-            myLogger.debug(`_handleItem: from:[${from}] to:[${to}]`)
+            myLogger.info(`change from:[${from}] to:[${to}]`)
         }
         // If this file was neither created nor deleted...
         if (previous && current) {
@@ -354,7 +368,7 @@ export const myShareDB ={
             if (previous.text !== current.text) {
                 //@@ fs.writeFileSync(current.name, current.text);
             
-                myLogger.debug(`save change file: ${current.name}`); 
+                myLogger.info(`save changed file: ${current.name}`); 
                 fs.writeFileSync(to, current.text);
             }
 
@@ -372,11 +386,11 @@ export const myShareDB ={
                 //@@ directoriesToDelete.push(previous.name); 
                    // directoriesToDelete.push(from);
                    try {
-                    myLogger.debug(`rename folder from:[${from}] to:[${to}]`);
+                    myLogger.info(`rename folder from:[${from}] to:[${to}]`);
                     fs.renameSync(from, to)
                     
                   } catch(err) {
-                    console.error(err)
+                    myLogger.error(err)
                   }
                 } else {
                     //@@ const newDir = path.dirname(current.name); 
@@ -385,7 +399,7 @@ export const myShareDB ={
                     if (!fs.existsSync(newDir)) {
                         fs.mkdirSync(newDir, { recursive: true });
                     }
-                    myLogger.debug(`rename file from:[${from}] to:[${to}]`);
+                    myLogger.info(`rename file from:[${from}] to:[${to}]`);
                     // Move the file to the new directory 
                     //@@ fs.renameSync(previous.name, current.name); 
                     fs.renameSync(from, to);
@@ -399,12 +413,12 @@ export const myShareDB ={
             let stats = fs.statSync(from);
             //Check if the file path we are trying to delete is a directory
             if (!stats.isDirectory()) {
-                myLogger.debug(`rm file: ${from}`);
+                myLogger.info(`rm file: ${from}`);
                 //@@ fs.unlinkSync(previous.name);
                 fs.unlinkSync(from);
             } else {
                 //Performs directory deletion.
-                myLogger.debug(`rm folder: ${from}`);
+                myLogger.info(`rm folder: ${from}`);
                 fs.rm(
                 //@@ previous.name,
                     from,
@@ -413,7 +427,7 @@ export const myShareDB ={
                 },
                 (error) => {
                     if (error) {
-                    console.log(error);
+                    myLogger.error(error);
                     }
                 },
                 );
@@ -426,11 +440,11 @@ export const myShareDB ={
             //@@ if (!isDirectory(current.name)) {
             if (!isDirectory(to)) {
                 //@@ fs.writeFileSync(current.name, current.text);
-                myLogger.debug(`create file: ${to}`);
+                myLogger.info(`create file: ${to}`);
                 fs.writeFileSync(to, current.text);
             } else {
                 //@@ fs.mkdirSync(current.name, { recursive: true });  
-                myLogger.debug(`create folder: ${to}`);
+                myLogger.info(`create folder: ${to}`);
                 fs.mkdirSync(to, { recursive: true });
             }
         }

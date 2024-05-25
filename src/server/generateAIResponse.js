@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import { json1Presence } from '../ot.js';
+import { myLogger } from './myLogger.js';
 
 const { editOp, type } = json1Presence;
 
@@ -29,17 +30,17 @@ export const generateAIResponse = async ({
   shareDBDoc,
 }) => {
   if (debug) {
-    console.log(
+    myLogger.debug(
       '[generateAIResponse] inputText:',
       inputText,
     );
-    console.log(
+    myLogger.debug(
       '[generateAIResponse] insertionCursor:',
       insertionCursor,
     );
-    console.log('[generateAIResponse] fileId:', fileId);
-    console.log('[generateAIResponse] streamId:', streamId);
-    console.log(
+    myLogger.debug('[generateAIResponse] fileId:', fileId);
+    myLogger.debug('[generateAIResponse] streamId:', streamId);
+    myLogger.debug(
       '[generateAIResponse] shareDBDoc:',
       shareDBDoc,
     );
@@ -76,8 +77,8 @@ export const generateAIResponse = async ({
   ];
 
   if (debug) {
-    console.log('[generateAIResponse] messages:');
-    console.log(JSON.stringify(messages, null, 2));
+    myLogger.debug('[generateAIResponse] messages:');
+    myLogger.debug(JSON.stringify(messages, null, 2));
   }
 
   streams[streamId] = await openai.chat.completions.create({

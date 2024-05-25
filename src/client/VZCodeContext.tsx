@@ -52,9 +52,7 @@ export type VZCodeContextValue = {
     next: (content: VZCodeContent) => VZCodeContent,
   ) => void;
   localPresence: any;
-  docPresence: any;
-  
-  spaceName: String| null;
+  docPresence: any; 
 
   files: Files | null;
   createFile: (fileName: string, text?: string) => void;

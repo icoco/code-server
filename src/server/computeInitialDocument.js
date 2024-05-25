@@ -9,6 +9,7 @@ import {
 import createIgnore from 'ignore';
 import { ignoreFilePattern, baseIgnore } from './config.js';
 import { isDirectory } from './isDirectory.js';
+import { myLogger } from './myLogger.js';
 
 /**
  * @param {string} fullPath - absolut path of the workspace root
@@ -53,7 +54,7 @@ const parseIgnoreFile = (
       return bang + slash + relativeGlob;
     });
   if (debugIgnore) {
-    console.debug(
+    myLogger.debug(
       'at',
       currentDirectory,
       'parsing',
@@ -148,7 +149,7 @@ export const computeInitialDocument = ({ fullPath }) => {
           (dirent.isDirectory() ? '/' : '');
         const keep = !ignore.ignores(relativePath);
         if (debugIgnore && !keep) {
-          console.debug(
+          myLogger.debug(
             'at',
             currentDirectory,
             'ignoring',
@@ -173,7 +174,7 @@ export const computeInitialDocument = ({ fullPath }) => {
         });
         return relativePath + '/';
       });
-    // console.log(currentDirectory);
+    // myLogger.debug(currentDirectory);
 
     files.push(...newFiles);
   }
@@ -192,10 +193,10 @@ export const computeInitialDocument = ({ fullPath }) => {
   });
 
   if (debugDirectories) {
-    console.log('files:');
-    console.log(files);
-    console.log('initialDocument:');
-    console.log(JSON.stringify(initialDocument, null, 2));
+    myLogger.debug('files:');
+    myLogger.debug(files);
+    myLogger.debug('initialDocument:');
+    myLogger.debug(JSON.stringify(initialDocument, null, 2));
   }
   return initialDocument;
 };

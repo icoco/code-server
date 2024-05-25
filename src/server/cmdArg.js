@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs'; 
-import { myLogger } from './utils.js';
+import { myLogger } from './myLogger.js';
 
 // 
 const isDevMode = function(){ 

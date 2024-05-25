@@ -21,7 +21,7 @@
     "preview": "concurrently \"npm run test-interactive\" \"vite preview\"",
     "prepublishOnly": "npm run build-release",
     "start-server-max": "cross-env NODE_OPTIONS=--max_old_space_size=8096 & node --max-old-space-size=8096  src/server/index.js dev --space=./space --site=./dist",
-    "start-server": "node src/server/index.js dev --space=./space --site=./dist --focus=__manifest__.py",
+    "start-server": "node src/server/index.js dev --space=./space --site=./dist --focus=__manifest__.py --slient=false",
     "start": "echo 🚀start dev... & echo 'live dev frontend: \r\n👉wsserver only' & concurrently \"npm run start-server\" \"vite \"",
     "build-server": "npx babel ./src --out-dir dist_server",
     "pkg": "pkg . ",

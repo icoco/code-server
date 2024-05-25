@@ -3,6 +3,7 @@ import { randomId } from '../../randomId';
 import { ShareDBDoc, VZCodeContent } from '../../types';
 import { useSubmitOperation } from '../useSubmitOperation';
 import { Request }  from "../utils/Request.js";
+import { preloadDoc } from "../api/apiClient.js" 
 
 // get the docId from the current url request paramter 
 export const getRequestDocId = function(){
@@ -11,6 +12,14 @@ export const getRequestDocId = function(){
  
   return docId ? docId : 'HomeSpace';
 }
+const preloadHomeSpace=()=>{
+  if (Request.isRootPath()){
+    const docId = getRequestDocId()
+    preloadDoc(docId)
+  } 
+}
+//silent mode if not special the docId or dir then preload the home space avoid empty file view 
+preloadHomeSpace();
 
 const onDocReady=()=>{ 
   // ---- appManager effect 
@@ -49,6 +58,8 @@ export const useShareDB = ({
 
   const [documentId, setDocumentId]= useState<string | null>(null);
 
+  console.debug('🧐 useShareDB,',connection)
+
   useEffect(() => {
     // Listen for connection state changes
     connection.on('connected', () => {
@@ -66,6 +77,7 @@ export const useShareDB = ({
     const collection = 'documents';
     const id = getRequestDocId();
     
+    console.debug('🧐 Initialize the ShareDB document,',connection)
     // Initialize the ShareDB document.
     const shareDBDoc = connection.get(collection, id);
 
