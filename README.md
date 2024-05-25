@@ -2,7 +2,7 @@
 
 CodeServer offers an online code editing environment, help you write code anywhere ~
 
-![UI](readme-demo.gif)
+![UI](https://github.com/icoco/code-server/blob/main/readme-demo.gif)
 
 ## Table of Contents
 
