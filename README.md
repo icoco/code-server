@@ -21,7 +21,7 @@ CodeServer offers an online code editing environment, help you write code anywhe
   ```
 
 - **Build Setup**:
-  1) build web page out to folder 'dist' :
+1) build web page out to folder 'dist' :
   ```
   npm run build 
   ```
@@ -30,19 +30,19 @@ CodeServer offers an online code editing environment, help you write code anywhe
   npm run start-server
   ```
 
-  2) build socket server out to folder 'dist_server' :
+2) build socket server out to folder 'dist_server' :
     ```
     npm run build-server
     ```
 
-  3) pkg  out to folder 'dist_server_bin' :
+3) pkg  out to folder 'dist_server_bin' :
 
     ```
     npm run pkg-release
     
     ```
 
-  then all executeable program was build in folder 'dist_server_bin'
+then all executeable program was build in folder 'dist_server_bin'
  
 
 # forked 
