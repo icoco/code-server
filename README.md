@@ -1,8 +1,9 @@
-# CodeServer☁️🔨:  Online Code Editor
+# CodeServer☁️🔨:  an Online Code Editor!
+
 
 CodeServer offers an online code editing environment, help you write code anywhere ~
 
-![UI](https://github.com/icoco/code-server/blob/main/readme-demo.gif)
+![UI](readme-demo.gif)
 
 ## Table of Contents
 
@@ -25,7 +26,11 @@ CodeServer offers an online code editing environment, help you write code anywhe
   ```
   npm run build 
   ```
-  1.1) dev start server
+  dev 
+  ```
+  npm run start  
+  ```
+  or 
   ```
   npm run start-server
   ```
